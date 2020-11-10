@@ -77,7 +77,7 @@ public class GradeController {
     }
 
     // DELETE
-    @DeleteMapping("/course/{id}")
+    @DeleteMapping("/grade/{id}")
     public GradeDTO deleteGrade(@PathVariable Integer id) {
         Grade grade = repo.getOne(id);
         GradeDTO deleted = gConv.entityToDTO(grade);

@@ -32,7 +32,7 @@ public class Student {
 
     private int gradeLevel;
 
-    @ManyToMany(mappedBy = "students", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH })
+    @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL)
     private List<Course> courses;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)

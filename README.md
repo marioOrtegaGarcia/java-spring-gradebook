@@ -2,6 +2,15 @@
 
 This Gradebook API was created using the Java Spring Boot API.
 
+## Test Cases
+
+- [ ] Create Integration, Controller and Service Tests
+  - [ ] Professor
+  - [ ] Student
+  - [ ] Course
+  - [ ] Assignment
+  - [ ] Grade
+
 ## Bugs
 
 - [ ] Fix removing Courses

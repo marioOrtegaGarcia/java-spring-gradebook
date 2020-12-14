@@ -5,6 +5,10 @@ import lombok.Data;
 @Data
 public class ProfessorDTO {
     private int id;
+
     private String email;
-    private String name;
+
+    private String firstName;
+
+    private String lastName;
 }

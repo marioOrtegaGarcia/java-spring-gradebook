@@ -6,8 +6,11 @@ import lombok.Data;
 public class GradeDTO {
 
     private int id;
+
     private int score;
+
     private StudentDTO student;
+
     private AssignmentDTO assignment;
 
 }

@@ -68,7 +68,7 @@ public class GradeController {
     @PutMapping(path = "/grade/{id}", consumes = { "application/json" })
     public GradeDTO updateGrade(@RequestBody GradeDTO dto, @PathVariable Integer id) {
         Grade grade = repo.findById(id).orElse(new Grade());
-        grade.setId(id);
+        // grade.setId(id);
         grade.setScore(dto.getScore());
         grade.setStudent(sConv.dtoToEntity(dto.getStudent()));
         grade.setAssignment(aConv.dtoToEntity(dto.getAssignment()));

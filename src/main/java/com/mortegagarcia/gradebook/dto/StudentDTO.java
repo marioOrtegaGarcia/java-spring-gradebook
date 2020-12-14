@@ -5,6 +5,10 @@ import lombok.Data;
 @Data
 public class StudentDTO {
     private int id;
-    private String name;
+
+    private String firstName;
+
+    private String lastName;
+
     private int gradeLevel;
 }

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -28,13 +30,17 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;
+    private String firstName;
+
+    private String lastName;
 
     private int gradeLevel;
 
-    @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> courses;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Grade> grades;
+
 }

@@ -14,7 +14,8 @@ public class StudentConverter {
     public StudentDTO entityToDTO(Student entity) {
         StudentDTO dto = new StudentDTO();
         dto.setId(entity.getId());
-        dto.setName(entity.getName());
+        dto.setFirstName(entity.getFirstName());
+        dto.setLastName(entity.getLastName());
         dto.setGradeLevel(entity.getGradeLevel());
         return dto;
     }
@@ -26,7 +27,8 @@ public class StudentConverter {
     public Student dtoToEntity(StudentDTO dto) {
         Student entity = new Student();
         entity.setId(dto.getId());
-        entity.setName(dto.getName());
+        entity.setFirstName(dto.getFirstName());
+        entity.setLastName(dto.getLastName());
         entity.setGradeLevel(dto.getGradeLevel());
         return entity;
     }

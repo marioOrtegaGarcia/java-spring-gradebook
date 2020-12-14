@@ -32,7 +32,9 @@ public class Professor {
 
     private String email;
 
-    private String name;
+    private String firstName;
+
+    private String lastName;
 
     private String phoneNumber;
 

@@ -9,6 +9,6 @@ import com.mortegagarcia.gradebook.model.Professor;
 
 public interface ProfessorRepository extends JpaRepository<Professor, Integer> {
 
-    @Query("SELECT p FROM Professor p WHERE p.name = ?1")
-    List<Professor> findProfesssorByName(String name);
+    @Query("SELECT p FROM Professor p WHERE p.firstName = ?1")
+    List<Professor> findProfesssorByFirstName(String firstName);
 }

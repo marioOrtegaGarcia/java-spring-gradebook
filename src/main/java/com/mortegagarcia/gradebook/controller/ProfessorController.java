@@ -52,7 +52,8 @@ public class ProfessorController {
     @PutMapping(path = "/professor/{id}", consumes = { "application/json" })
     public ProfessorDTO updateProfessor(@RequestBody ProfessorDTO dto, @PathVariable Integer id) {
         Professor professor = repo.findById(id).orElse(new Professor());
-        professor.setName(dto.getName());
+        professor.setFirstName(dto.getFirstName());
+        professor.setLastName(dto.getLastName());
         professor.setEmail(dto.getEmail());
         professor = repo.save(professor);
         return conv.entityToDTO(professor);

@@ -50,7 +50,8 @@ public class StudentController {
     @PutMapping(path = "/student/{id}", consumes = { "application/json" })
     public StudentDTO updateStudent(@RequestBody StudentDTO dto, @PathVariable Integer id) {
         Student student = repo.findById(id).orElse(new Student());
-        student.setName(dto.getName());
+        student.setFirstName(dto.getFirstName());
+        student.setLastName(dto.getLastName());
         student.setGradeLevel(dto.getGradeLevel());
         student = repo.save(student);
         return conv.entityToDTO(student);

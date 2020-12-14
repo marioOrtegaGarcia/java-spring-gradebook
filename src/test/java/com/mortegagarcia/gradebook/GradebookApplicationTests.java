@@ -26,7 +26,7 @@ class GradebookApplicationTests {
 
 		// assert
 		Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		Assertions.assertThat(response.getBody().getName()).isEqualTo("Mario");
+		Assertions.assertThat(response.getBody().getFirstName()).isEqualTo("Mario");
 
 	}
 

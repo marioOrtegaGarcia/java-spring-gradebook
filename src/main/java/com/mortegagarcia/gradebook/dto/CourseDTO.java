@@ -8,6 +8,8 @@ import lombok.Data;
 public class CourseDTO {
 
     private int id;
+
     private String name;
+
     private List<AssignmentDTO> assignments;
 }

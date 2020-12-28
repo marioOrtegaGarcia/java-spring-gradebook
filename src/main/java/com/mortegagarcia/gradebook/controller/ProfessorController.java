@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mortegagarcia.gradebook.converter.ProfessorConverter;
 import com.mortegagarcia.gradebook.dto.ProfessorDTO;
+import com.mortegagarcia.gradebook.model.Course;
 import com.mortegagarcia.gradebook.model.Professor;
 import com.mortegagarcia.gradebook.repository.ProfessorRepository;
 
@@ -64,6 +65,10 @@ public class ProfessorController {
     public ProfessorDTO deleteProfessor(@PathVariable Integer id) {
         Professor professor = repo.getOne(id);
         ProfessorDTO deleted = conv.entityToDTO(professor);
+        List<Course> courses = professor.getCourses();
+        for (Course c : courses) {
+            c.setProfessor(null);
+        }
         repo.delete(professor);
         return deleted;
     }

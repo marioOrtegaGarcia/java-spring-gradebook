@@ -1,108 +1,59 @@
 -- INSERT INTO PROFESSOR
--- VALUES(1, 22, 'mario@gmail.com', 'Mario', '5105555555');
--- INSERT INTO PROFESSOR
--- VALUES(2, 23, 'luigi@gmail.com', 'Luigi', '5105551234');
--- INSERT INTO PROFESSOR
--- VALUES(3, 24, 'toad@gmail.com', 'Toad', '5105554321');
+-- VALUES
+--   (1, 22, 'mario@gmail.com', 'Mario', 'Mario', '5105555555'),
+--   (2, 23, 'luigi@gmail.com', 'Luigi', 'Mario', '5105551234'),
+--   (3, 24, 'toad@gmail.com', 'Toad', 'Mushroom', '5105554321');
 
 -- INSERT INTO COURSE
--- VALUES(1,
---                 'Linear Algebra',
---                 1
--- );
--- INSERT INTO COURSE
--- VALUES(2,
---                 'Machine Learning',
---                 1
--- );
--- INSERT INTO COURSE
--- VALUES(3,
---                 'Computer Vision',
---                 3
--- );
+-- VALUES
+--   (1, 'Linear Algebra', 1),
+--   (2, 'Machine Learning', 1),
+--   (3, 'Computer Vision', 3);
 
 -- INSERT INTO STUDENT
--- VALUES(1, 12, 'Bowser');
--- INSERT INTO STUDENT
--- VALUES(2, 12, 'Turtle');
--- INSERT INTO STUDENT
--- VALUES(3, 12, 'Yoshi');
--- INSERT INTO STUDENT
--- VALUES(4, 12, 'Wario');
--- INSERT INTO STUDENT
--- VALUES(5, 12, 'Waluigi');
--- INSERT INTO STUDENT
--- VALUES(6, 12, 'Rosalina');
--- INSERT INTO STUDENT
--- VALUES(7, 12, 'Princess Peach');
--- INSERT INTO STUDENT
--- VALUES(8, 12, 'Princess Daisy');
--- INSERT INTO STUDENT
--- VALUES(9, 12, 'Kamek');
--- INSERT INTO STUDENT
--- VALUES(10, 12, 'Birdo');
--- INSERT INTO STUDENT
--- VALUES(11, 12, 'Chain Chomp');
+-- VALUES
+--   (1, 12, 'Bowser', 'Turtle', 'bowser@gmail.com'),
+--   (2, 12, 'Turtle', 'Turtle', 'turtle@gmail.com'),
+--   (3, 12, 'Yoshi', 'Dinosaur', 'yoshi@gmail.com'),
+--   (4, 12, 'Wario', 'Wario', 'wario@gmail.com'),
+--   (5, 12, 'Waluigi', 'Wario', 'waluigi@gmail.com'),
+--   (6, 12, 'Rosalina', 'Person', 'rosalia@gmail.com'),
+--   (7, 12, 'Peach', 'Princess', 'peach@gmail.com'),
+--   (8, 12, 'Daisy', 'Princess', 'daidy@gmail.com'),
+--   (9, 12, 'Kamek', 'Witch', 'kamek@gmail.com'),
+--   (10, 12, 'Birdo', 'Dinosaur', 'birdo@gmail.com'),
+--   (11, 12, 'Chain Chomp', 'Creature', 'chainchomp@gmail.com');
 
-
-
--- INSERT INTO COURSE_STUDENTS
--- VALUES(1, 1);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(1, 3);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(1, 6);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(1, 7);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(1, 10);
-
--- INSERT INTO COURSE_STUDENTS
--- VALUES(2, 1);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(2, 2);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(2, 4);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(2, 5);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(2, 9);
-
--- INSERT INTO COURSE_STUDENTS
--- VALUES(3, 2);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(3, 3);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(3, 5);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(3, 6);
--- INSERT INTO COURSE_STUDENTS
--- VALUES(3, 10);
+-- INSERT INTO COURSE_STUDENT
+-- VALUES
+--   (1, 1),
+--   (1, 3),
+--   (1, 6),
+--   (1, 7),
+--   (1, 10),
+--   (2, 1),
+--   (2, 2),
+--   (2, 4),
+--   (2, 5),
+--   (2, 9),
+--   (3, 2),
+--   (3, 3),
+--   (3, 5),
+--   (3, 6),
+--   (3, 10);
 
 -- INSERT INTO ASSIGNMENT
--- VALUES(1, 'Kernel Filter', 10, 3);
--- INSERT INTO ASSIGNMENT
--- VALUES(4, 'Pyramid Image Processing', 10, 3);
--- INSERT INTO ASSIGNMENT
--- VALUES(2, 'Properties of a Linear Function', 10, 1);
--- INSERT INTO ASSIGNMENT
--- VALUES(3, 'Dimensionality Reduction', 10, 2);
-
+-- VALUES
+--   (1, 'Kernel Filter', 10, 3),
+--   (4, 'Pyramid Image Processing', 10, 3),
+--   (2, 'Properties of a Linear Function', 10, 1),
+--   (3, 'Dimensionality Reduction', 10, 2);
 
 -- INSERT INTO GRADE
--- VALUES(1, 8, 1, 2);
--- INSERT INTO GRADE
--- VALUES(2, 4, 1, 3);
--- INSERT INTO GRADE
--- VALUES(3, 7, 1, 5);
--- INSERT INTO GRADE
--- VALUES(4, 8, 1, 6);
--- INSERT INTO GRADE
--- VALUES(5, 10, 1, 10);
-
-
-
--- -- SELECT *
--- -- FROM PROFESSOR P, COURSE C, ASSIGNMENT A
--- -- WHERE P.ID = C.PROFESSOR_ID AND C.ID = A.COURSE_ID
+-- VALUES
+--   (1, 8, 1, 2),
+--   (2, 4, 1, 3),
+--   (3, 7, 1, 5),
+--   (4, 8, 1, 6),
+--   (5, 10, 1, 10);
 

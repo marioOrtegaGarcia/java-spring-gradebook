@@ -11,4 +11,5 @@ public interface ProfessorRepository extends JpaRepository<Professor, Integer> {
 
     @Query("SELECT p FROM Professor p WHERE p.firstName = ?1")
     List<Professor> findProfesssorByFirstName(String firstName);
+
 }

@@ -38,7 +38,8 @@ public class Professor {
 
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+            CascadeType.REFRESH })
     private List<Course> courses;
 
 }

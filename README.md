@@ -21,7 +21,7 @@ This Gradebook API was created using the Java Spring Boot API.
 
 ## Features to implement
 
-- [ ] Find Courses without professors
+- [x] Find Courses without professors
 - [ ] Find students missing grades for an assignment.
 - [ ] Get Average, Minimum, and Maximum grade for assignment.
 - [ ] Compute a course letter grade.

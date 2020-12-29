@@ -37,6 +37,7 @@ public class Course {
     private String name;
 
     @ManyToOne
+    @JoinTable(name = "course_professor", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "professor_id"))
     private Professor professor;
 
     @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })

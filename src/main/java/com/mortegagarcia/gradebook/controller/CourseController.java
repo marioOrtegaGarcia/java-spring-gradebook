@@ -52,6 +52,11 @@ public class CourseController {
         return repo.findCourseByProfessorID(id);
     }
 
+    @GetMapping("courses/professor/null")
+    public List<Course> findCourseWhereProffessorIsNull() {
+        return repo.findCourseWhereProfessorIsNull();
+    }
+
     // UPDATE
     @PutMapping(path = "/course/{id}", consumes = { "application/json" })
     public CourseDTO updateCourse(@RequestBody CourseDTO dto, @PathVariable Integer id) {

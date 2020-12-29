@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 public class ProfessorConverter {
 
     public ProfessorDTO entityToDTO(Professor entity) {
+        if (entity == null)
+            return null;
         ModelMapper mapper = new ModelMapper();
         return mapper.map(entity, ProfessorDTO.class);
     }
@@ -22,6 +24,8 @@ public class ProfessorConverter {
     }
 
     public Professor dtoToEntity(ProfessorDTO dto) {
+        if (dto == null)
+            return null;
         ModelMapper mapper = new ModelMapper();
         return mapper.map(dto, Professor.class);
     }

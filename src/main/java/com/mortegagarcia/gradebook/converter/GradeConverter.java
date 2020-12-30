@@ -6,34 +6,31 @@ import java.util.stream.Collectors;
 import com.mortegagarcia.gradebook.dto.GradeDTO;
 import com.mortegagarcia.gradebook.model.Grade;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GradeConverter {
 
     public GradeDTO entityToDTO(Grade entity) {
-        GradeDTO dto = new GradeDTO();
-        dto.setId(entity.getId());
-        dto.setScore(entity.getScore());
-        // dto.setStudent(entity.getStudent());
-        // dto.setAssignment(entity.getAssignment());
-        return dto;
+        if (entity == null)
+            return null;
+        ModelMapper mapper = new ModelMapper();
+        return mapper.map(entity, GradeDTO.class);
     }
 
     public List<GradeDTO> entityToDTO(List<Grade> entity) {
-        return entity.stream().map(this::entityToDTO).collect(Collectors.toList());
+        return (entity == null) ? null : entity.stream().map(this::entityToDTO).collect(Collectors.toList());
     }
 
     public Grade dtoToEntity(GradeDTO dto) {
-        Grade entity = new Grade();
-        entity.setId(dto.getId());
-        entity.setScore(dto.getScore());
-        // entity.setStudent(dto.getStudent());
-        // entity.setAssignment(dto.getAssignment());
-        return entity;
+        if (dto == null)
+            return null;
+        ModelMapper mapper = new ModelMapper();
+        return mapper.map(dto, Grade.class);
     }
 
     public List<Grade> dtoToEntity(List<GradeDTO> dto) {
-        return dto.stream().map(this::dtoToEntity).collect(Collectors.toList());
+        return (dto == null) ? null : dto.stream().map(this::dtoToEntity).collect(Collectors.toList());
     }
 }

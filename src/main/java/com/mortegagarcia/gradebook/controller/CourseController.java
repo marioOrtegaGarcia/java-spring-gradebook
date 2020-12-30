@@ -8,6 +8,8 @@ import com.mortegagarcia.gradebook.model.Course;
 import com.mortegagarcia.gradebook.repository.CourseRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,54 +30,73 @@ public class CourseController {
     private CourseConverter conv;
 
     @GetMapping("courses")
-    public List<Course> getCourses() {
-        return repo.findAll();
+    public ResponseEntity<List<CourseDTO>> getCourses() {
+        List<Course> findAll = repo.findAll();
+        List<CourseDTO> coursesDTO = conv.entityToDTO(findAll);
+        return (coursesDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(coursesDTO, HttpStatus.OK);
+
     }
 
     // CREATE
     @PostMapping(path = "/course", consumes = { "application/json" })
-    public CourseDTO addCourse(@RequestBody CourseDTO course) {
+    public ResponseEntity<CourseDTO> addCourse(@RequestBody CourseDTO course) {
         repo.save(conv.dtoToEntity(course));
-        return conv.entityToDTO(repo.getOne(course.getId()));
+        CourseDTO courseDTO = conv.entityToDTO(repo.getOne(course.getId()));
+        return (courseDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(courseDTO, HttpStatus.OK);
     }
 
     // READ
     @GetMapping("course/{id}")
-    public CourseDTO getCourse(@PathVariable Integer id) {
+    public ResponseEntity<CourseDTO> getCourse(@PathVariable Integer id) {
         Course findByIdOrElse = repo.findById(id).orElse(null);
-        // TODO: Throw HTML error for wrong id
-        return conv.entityToDTO(findByIdOrElse);
+        CourseDTO course = conv.entityToDTO(findByIdOrElse);
+        if (course == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(course, HttpStatus.OK);
     }
 
     @GetMapping("courses/professor/{id}")
-    public List<Course> findCourseByProffessorID(@PathVariable Integer id) {
-        return repo.findCourseByProfessorID(id);
+    public ResponseEntity<List<CourseDTO>> findCourseByProffessorID(@PathVariable Integer id) {
+        List<Course> courses = repo.findCourseByProfessorID(id);
+        List<CourseDTO> coursesDTO = conv.entityToDTO(courses);
+        if (coursesDTO == null) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(coursesDTO, HttpStatus.OK);
     }
 
     @GetMapping("courses/professor/null")
-    public List<Course> findCourseWhereProffessorIsNull() {
-        return repo.findCourseWhereProfessorIsNull();
+    public ResponseEntity<List<CourseDTO>> findCourseWhereProffessorIsNull() {
+        List<Course> courses = repo.findCourseWhereProfessorIsNull();
+        List<CourseDTO> coursesDTO = conv.entityToDTO(courses);
+        if (coursesDTO == null) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(coursesDTO, HttpStatus.OK);
     }
 
     // UPDATE
     @PutMapping(path = "/course/{id}", consumes = { "application/json" })
-    public CourseDTO updateCourse(@RequestBody CourseDTO dto, @PathVariable Integer id) {
+    public ResponseEntity<CourseDTO> updateCourse(@RequestBody CourseDTO dto, @PathVariable Integer id) {
         Course course = repo.findById(id).orElse(new Course());
         course.setId(id);
         course.setName(dto.getName());
         course = repo.save(course);
-        return conv.entityToDTO(course);
+        CourseDTO courseDTO = conv.entityToDTO(course);
+        return (courseDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(courseDTO, HttpStatus.OK);
     }
 
     // DELETE
     @DeleteMapping("/course/{id}")
-    public CourseDTO deleteCourse(@PathVariable Integer id) {
+    public ResponseEntity<CourseDTO> deleteCourse(@PathVariable Integer id) {
         Course course = repo.getOne(id);
         CourseDTO deleted = conv.entityToDTO(course);
-        // TODO: Handle delete conflicts, issues with cascade type causing deletion of
-        // students. Fix by creating custom delete function
         repo.delete(course);
-        return deleted;
+        return (deleted == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 
 }

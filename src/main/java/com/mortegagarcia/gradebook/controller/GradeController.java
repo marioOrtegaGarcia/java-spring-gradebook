@@ -10,6 +10,8 @@ import com.mortegagarcia.gradebook.model.Grade;
 import com.mortegagarcia.gradebook.repository.GradeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,53 +38,82 @@ public class GradeController {
     private AssignmentConverter aConv;
 
     @GetMapping("grades")
-    public List<Grade> getGrades() {
-        return repo.findAll();
+    public ResponseEntity<List<GradeDTO>> getGrades() {
+        List<Grade> findAll = repo.findAll();
+        List<GradeDTO> gradesDTO = gConv.entityToDTO(findAll);
+        return (gradesDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(gradesDTO, HttpStatus.OK);
     }
 
     // CREATE
     @PostMapping(path = "/grade", consumes = { "application/json" })
-    public GradeDTO addGrade(@RequestBody GradeDTO grade) {
+    public ResponseEntity<GradeDTO> addGrade(@RequestBody GradeDTO grade) {
         repo.save(gConv.dtoToEntity(grade));
-        return gConv.entityToDTO(repo.getOne(grade.getId()));
+        GradeDTO gradeDTO = gConv.entityToDTO(repo.getOne(grade.getId()));
+        return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
     }
 
     // READ
     @GetMapping("grade/{id}")
-    public GradeDTO getGrade(@PathVariable Integer id) {
+    public ResponseEntity<GradeDTO> getGrade(@PathVariable Integer id) {
         Grade findByIdOrElse = repo.findById(id).orElse(null);
-        return gConv.entityToDTO(findByIdOrElse);
+        GradeDTO gradeDTO = gConv.entityToDTO(findByIdOrElse);
+        return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "grades/assignment/{id}")
-    public List<GradeDTO> getGradeByAssignmentID(@PathVariable Integer id) {
-        return gConv.entityToDTO(repo.findGradeByAssignmentID(id));
+    public ResponseEntity<List<GradeDTO>> getGradeByAssignmentID(@PathVariable Integer id) {
+        List<Grade> gradesByAssignmentID = repo.findGradeByAssignmentID(id);
+        List<GradeDTO> gradesDTO = gConv.entityToDTO(gradesByAssignmentID);
+        return (gradesDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(gradesDTO, HttpStatus.OK);
     }
 
-    @GetMapping(value = "grades/avg/assignment/{id}")
-    public Double getAssignmentAverageScore(@PathVariable Integer id) {
-        return repo.findAssignmentAverageScore(id);
+    @GetMapping(value = "grades/assignment/{id}/avg")
+    public ResponseEntity<Double> getAssignmentAverageScore(@PathVariable Integer id) {
+        Double averageScore = repo.findAssignmentAverageScore(id);
+        return (averageScore == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(averageScore, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "grades/assignment/{id}/max")
+    public ResponseEntity<Double> getAssignmentMaximumScore(@PathVariable Integer id) {
+        Double averageScore = repo.findAssignmentMaximumScore(id);
+        return (averageScore == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(averageScore, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "grades/assignment/{id}/min")
+    public ResponseEntity<Double> getAssignmentMinimumScore(@PathVariable Integer id) {
+        Double averageScore = repo.findAssignmentMinimumScore(id);
+        return (averageScore == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(averageScore, HttpStatus.OK);
     }
 
     // UPDATE
     @PutMapping(path = "/grade/{id}", consumes = { "application/json" })
-    public GradeDTO updateGrade(@RequestBody GradeDTO dto, @PathVariable Integer id) {
+    public ResponseEntity<GradeDTO> updateGrade(@RequestBody GradeDTO dto, @PathVariable Integer id) {
         Grade grade = repo.findById(id).orElse(new Grade());
-        // grade.setId(id);
         grade.setScore(dto.getScore());
         grade.setStudent(sConv.dtoToEntity(dto.getStudent()));
         grade.setAssignment(aConv.dtoToEntity(dto.getAssignment()));
         grade = repo.save(grade);
-        return gConv.entityToDTO(grade);
+        GradeDTO gradeDTO = gConv.entityToDTO(grade);
+        return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
     }
 
     // DELETE
     @DeleteMapping("/grade/{id}")
-    public GradeDTO deleteGrade(@PathVariable Integer id) {
+    public ResponseEntity<GradeDTO> deleteGrade(@PathVariable Integer id) {
         Grade grade = repo.getOne(id);
         GradeDTO deleted = gConv.entityToDTO(grade);
+        if (deleted == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         repo.delete(grade);
-        return deleted;
+        return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 
 }

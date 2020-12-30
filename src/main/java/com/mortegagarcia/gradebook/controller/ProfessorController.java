@@ -9,6 +9,8 @@ import com.mortegagarcia.gradebook.model.Professor;
 import com.mortegagarcia.gradebook.repository.ProfessorRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,48 +31,56 @@ public class ProfessorController {
     private ProfessorConverter conv;
 
     @GetMapping("professors")
-    public List<ProfessorDTO> getProfessors() {
+    public ResponseEntity<List<ProfessorDTO>> getProfessors() {
         List<Professor> findAll = repo.findAll();
-        return conv.entityToDTO(findAll);
+        List<ProfessorDTO> professorsDTO = conv.entityToDTO(findAll);
+        return (professorsDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(professorsDTO, HttpStatus.OK);
     }
 
     // CREATE
     @PostMapping(path = "/professor", consumes = { "application/json" })
-    public ProfessorDTO addProfessor(@RequestBody ProfessorDTO professor) {
+    public ResponseEntity<ProfessorDTO> addProfessor(@RequestBody ProfessorDTO professor) {
         repo.save(conv.dtoToEntity(professor));
-        return conv.entityToDTO(repo.getOne(professor.getId()));
+        ProfessorDTO professorDTO = conv.entityToDTO(repo.getOne(professor.getId()));
+        return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(professorDTO, HttpStatus.OK);
     }
 
     // READ
     @GetMapping("professor/{id}")
-    public ProfessorDTO getProfessor(@PathVariable Integer id) {
+    public ResponseEntity<ProfessorDTO> getProfessor(@PathVariable Integer id) {
         Professor findByIdOrElse = repo.findById(id).orElse(null);
-        // TODO: Throw HTML error for wrong id
-        return conv.entityToDTO(findByIdOrElse);
+        ProfessorDTO professorDTO = conv.entityToDTO(findByIdOrElse);
+        return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(professorDTO, HttpStatus.OK);
     }
 
     // UPDATE
     @PutMapping(path = "/professor/{id}", consumes = { "application/json" })
-    public ProfessorDTO updateProfessor(@RequestBody ProfessorDTO dto, @PathVariable Integer id) {
+    public ResponseEntity<ProfessorDTO> updateProfessor(@RequestBody ProfessorDTO dto, @PathVariable Integer id) {
         Professor professor = repo.findById(id).orElse(new Professor());
         professor.setFirstName(dto.getFirstName());
         professor.setLastName(dto.getLastName());
         professor.setEmail(dto.getEmail());
         professor = repo.save(professor);
-        return conv.entityToDTO(professor);
+        ProfessorDTO professorDTO = conv.entityToDTO(professor);
+        return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(professorDTO, HttpStatus.OK);
     }
 
     // DELETE
     @DeleteMapping("/professor/{id}")
-    public ProfessorDTO deleteProfessor(@PathVariable Integer id) {
+    public ResponseEntity<ProfessorDTO> deleteProfessor(@PathVariable Integer id) {
         Professor professor = repo.getOne(id);
         ProfessorDTO deleted = conv.entityToDTO(professor);
+        if (deleted == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         List<Course> courses = professor.getCourses();
-        for (Course c : courses) {
+        for (Course c : courses)
             c.setProfessor(null);
-        }
         repo.delete(professor);
-        return deleted;
+        return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 
 }

@@ -16,4 +16,9 @@ public interface GradeRepository extends JpaRepository<Grade, Integer> {
     @Query("SELECT AVG(CAST(g.score as double)) FROM Grade g WHERE g.assignment.id = :assignmentID")
     Double findAssignmentAverageScore(@Param("assignmentID") Integer id);
 
+    @Query("SELECT MIN(CAST(g.score as double)) FROM Grade g WHERE g.assignment.id = :assignmentID")
+    Double findAssignmentMinimumScore(@Param("assignmentID") Integer id);
+
+    @Query("SELECT MAX(CAST(g.score as double)) FROM Grade g WHERE g.assignment.id = :assignmentID")
+    Double findAssignmentMaximumScore(@Param("assignmentID") Integer id);
 }

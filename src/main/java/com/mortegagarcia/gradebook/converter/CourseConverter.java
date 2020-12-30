@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.mortegagarcia.gradebook.dto.CourseDTO;
 import com.mortegagarcia.gradebook.model.Course;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,27 +17,26 @@ public class CourseConverter {
     AssignmentConverter conv;
 
     public CourseDTO entityToDTO(Course entity) {
-        CourseDTO dto = new CourseDTO();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setAssignments(conv.entityToDTO(entity.getAssignments()));
-        return dto;
+        if (entity == null)
+            return null;
+
+        ModelMapper mapper = new ModelMapper();
+        return mapper.map(entity, CourseDTO.class);
     }
 
     public List<CourseDTO> entityToDTO(List<Course> entity) {
-        return entity.stream().map(this::entityToDTO).collect(Collectors.toList());
+        return (entity == null) ? null : entity.stream().map(this::entityToDTO).collect(Collectors.toList());
     }
 
     public Course dtoToEntity(CourseDTO dto) {
-        Course entity = new Course();
-        entity.setId(dto.getId());
-        entity.setName(dto.getName());
-        entity.setAssignments(conv.dtoToEntity(dto.getAssignments()));
-        return entity;
+        if (dto == null)
+            return null;
+        ModelMapper mapper = new ModelMapper();
+        return mapper.map(dto, Course.class);
     }
 
     public List<Course> dtoToEntity(List<CourseDTO> dto) {
-        return dto.stream().map(this::dtoToEntity).collect(Collectors.toList());
+        return (dto == null) ? null : dto.stream().map(this::dtoToEntity).collect(Collectors.toList());
     }
 
 }

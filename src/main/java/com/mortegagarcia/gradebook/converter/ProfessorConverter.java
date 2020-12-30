@@ -20,7 +20,7 @@ public class ProfessorConverter {
     }
 
     public List<ProfessorDTO> entityToDTO(List<Professor> entity) {
-        return entity.stream().map(this::entityToDTO).collect(Collectors.toList());
+        return (entity == null) ? null : entity.stream().map(this::entityToDTO).collect(Collectors.toList());
     }
 
     public Professor dtoToEntity(ProfessorDTO dto) {
@@ -31,6 +31,6 @@ public class ProfessorConverter {
     }
 
     public List<Professor> dtoToEntity(List<ProfessorDTO> dto) {
-        return dto.stream().map(this::dtoToEntity).collect(Collectors.toList());
+        return (dto == null) ? null : dto.stream().map(this::dtoToEntity).collect(Collectors.toList());
     }
 }

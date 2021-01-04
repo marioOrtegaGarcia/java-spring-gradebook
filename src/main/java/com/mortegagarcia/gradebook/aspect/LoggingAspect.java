@@ -30,12 +30,17 @@ public class LoggingAspect {
     // Pointcut Expression used to log the repository package classes
   }
 
+  @Pointcut("execution(* com.mortegagarcia.gradebook.model.*.*(..))")
+  private void forModelPackage() {
+    // Pointcut Expression used to log the model package classes
+  }
+
   @Pointcut("execution(* com.mortegagarcia.gradebook.dto.*.*(..))")
   private void forDtoPackage() {
     // Pointcut Expression used to log the dto package classes
   }
 
-  @Pointcut("forControllerPackage() || forRepositoryPackage() || forDtoPackage()")
+  @Pointcut("forControllerPackage() || forRepositoryPackage() || forDtoPackage() || forModelPackage()")
   private void forAppFlow() {
     // Pointcut Expression used to log application flow
   }

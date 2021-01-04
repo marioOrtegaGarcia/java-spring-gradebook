@@ -41,8 +41,8 @@ public class ProfessorController {
     // CREATE
     @PostMapping(path = "/professor", consumes = { "application/json" })
     public ResponseEntity<ProfessorDTO> addProfessor(@RequestBody ProfessorDTO professor) {
-        repo.save(conv.dtoToEntity(professor));
-        ProfessorDTO professorDTO = conv.entityToDTO(repo.getOne(professor.getId()));
+        Professor saved = repo.save(conv.dtoToEntity(professor));
+        ProfessorDTO professorDTO = conv.entityToDTO(repo.getOne(saved.getId()));
         return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(professorDTO, HttpStatus.OK);
     }

@@ -11,4 +11,6 @@ public class StudentDTO {
     private String lastName;
 
     private int gradeLevel;
+
+    private String email;
 }

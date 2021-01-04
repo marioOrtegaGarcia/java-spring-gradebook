@@ -63,6 +63,7 @@ public class ProfessorController {
         professor.setFirstName(dto.getFirstName());
         professor.setLastName(dto.getLastName());
         professor.setEmail(dto.getEmail());
+        professor.setPhoneNumber(dto.getPhoneNumber());
         professor = repo.save(professor);
         ProfessorDTO professorDTO = conv.entityToDTO(professor);
         return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)

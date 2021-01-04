@@ -62,6 +62,7 @@ public class StudentController {
         student.setFirstName(dto.getFirstName());
         student.setLastName(dto.getLastName());
         student.setGradeLevel(dto.getGradeLevel());
+        student.setEmail(dto.getEmail());
         student = repo.save(student);
         StudentDTO studentDTO = conv.entityToDTO(student);
         return (studentDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)

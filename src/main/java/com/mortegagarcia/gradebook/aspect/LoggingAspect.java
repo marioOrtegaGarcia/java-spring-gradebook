@@ -3,6 +3,7 @@ package com.mortegagarcia.gradebook.aspect;
 import java.util.logging.Logger;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -40,13 +41,13 @@ public class LoggingAspect {
   }
 
   @Before("forAppFlow()")
-  public void before(JoinPoint theJoinPoint) {
-    String calledMethodString = "=====>> @Before: calling method: " + theJoinPoint.getSignature().toShortString();
+  public void before(JoinPoint joinPoint) {
+    String calledMethodString = "=====>> @Before: calling method: " + joinPoint.getSignature().toShortString();
     myLogger.info(calledMethodString);
 
     // display the arguments to the method
     // get the arguments
-    Object[] args = theJoinPoint.getArgs();
+    Object[] args = joinPoint.getArgs();
 
     // loop thru and display args
     for (Object tempArg : args) {
@@ -54,6 +55,18 @@ public class LoggingAspect {
       myLogger.info(argumentString);
     }
 
+  }
+
+  @AfterReturning(pointcut = "forAppFlow()", returning = "returnResult")
+  public void afterReturning(JoinPoint joinPoint, Object returnResult) {
+
+    // display method we are returning from
+    String calledMethodString = "=====>> @AfterReturning: from method: " + joinPoint.getSignature().toShortString();
+    myLogger.info(calledMethodString);
+
+    // display data returned
+    String returnedDataString = "=====>> result: " + returnResult;
+    myLogger.info(returnedDataString);
   }
 
 }

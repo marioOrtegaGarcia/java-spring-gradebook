@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 public class GradeConverter {
 
     public GradeDTO entityToDTO(Grade entity) {
-        if (entity == null)
-            return null;
+        if (entity == null) return null;
         ModelMapper mapper = new ModelMapper();
         return mapper.map(entity, GradeDTO.class);
     }
@@ -24,8 +23,7 @@ public class GradeConverter {
     }
 
     public Grade dtoToEntity(GradeDTO dto) {
-        if (dto == null)
-            return null;
+        if (dto == null) return null;
         ModelMapper mapper = new ModelMapper();
         return mapper.map(dto, Grade.class);
     }

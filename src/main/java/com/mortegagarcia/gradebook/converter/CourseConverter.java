@@ -17,9 +17,7 @@ public class CourseConverter {
     AssignmentConverter conv;
 
     public CourseDTO entityToDTO(Course entity) {
-        if (entity == null)
-            return null;
-
+        if (entity == null) return null;
         ModelMapper mapper = new ModelMapper();
         return mapper.map(entity, CourseDTO.class);
     }
@@ -29,8 +27,7 @@ public class CourseConverter {
     }
 
     public Course dtoToEntity(CourseDTO dto) {
-        if (dto == null)
-            return null;
+        if (dto == null) return null;
         ModelMapper mapper = new ModelMapper();
         return mapper.map(dto, Course.class);
     }

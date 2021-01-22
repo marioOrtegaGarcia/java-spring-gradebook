@@ -1,6 +1,7 @@
 package com.mortegagarcia.gradebook.converter;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.mortegagarcia.gradebook.dto.AssignmentDTO;
@@ -13,8 +14,7 @@ import org.springframework.stereotype.Component;
 public class AssignmentConverter {
 
     public AssignmentDTO entityToDTO(Assignment entity) {
-        if (entity == null)
-            return null;
+        if (entity == null) return null;
         ModelMapper mapper = new ModelMapper();
         return mapper.map(entity, AssignmentDTO.class);
     }
@@ -24,8 +24,7 @@ public class AssignmentConverter {
     }
 
     public Assignment dtoToEntity(AssignmentDTO dto) {
-        if (dto == null)
-            return null;
+        if (dto == null) return null;
         ModelMapper mapper = new ModelMapper();
         return mapper.map(dto, Assignment.class);
     }
@@ -33,5 +32,4 @@ public class AssignmentConverter {
     public List<Assignment> dtoToEntity(List<AssignmentDTO> dto) {
         return (dto == null) ? null : dto.stream().map(this::dtoToEntity).collect(Collectors.toList());
     }
-
 }

@@ -1,48 +1,32 @@
 package com.mortegagarcia.gradebook.controller;
 
-import java.util.List;
-
-import com.mortegagarcia.gradebook.converter.CourseConverter;
 import com.mortegagarcia.gradebook.dto.CourseDTO;
-import com.mortegagarcia.gradebook.model.Course;
-import com.mortegagarcia.gradebook.repository.CourseRepository;
-
+import com.mortegagarcia.gradebook.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class CourseController {
 
     @Autowired
-    private CourseRepository repo;
-
-    @Autowired
-    private CourseConverter conv;
+    private CourseService service;
 
     @GetMapping("courses")
     public ResponseEntity<List<CourseDTO>> getCourses() {
-        List<Course> findAll = repo.findAll();
-        List<CourseDTO> coursesDTO = conv.entityToDTO(findAll);
+        List<CourseDTO> coursesDTO = service.findAll();
         return (coursesDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(coursesDTO, HttpStatus.OK);
-
     }
 
     // CREATE
-    @PostMapping(path = "/course", consumes = { "application/json" })
+    @PostMapping(path = "/course", consumes = {"application/json"})
     public ResponseEntity<CourseDTO> addCourse(@RequestBody CourseDTO course) {
-        repo.save(conv.dtoToEntity(course));
-        CourseDTO courseDTO = conv.entityToDTO(repo.getOne(course.getId()));
+        CourseDTO courseDTO = service.save(course);
         return (courseDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(courseDTO, HttpStatus.OK);
     }
@@ -50,41 +34,27 @@ public class CourseController {
     // READ
     @GetMapping("course/{id}")
     public ResponseEntity<CourseDTO> getCourse(@PathVariable Integer id) {
-        Course findByIdOrElse = repo.findById(id).orElse(null);
-        CourseDTO course = conv.entityToDTO(findByIdOrElse);
-        if (course == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(course, HttpStatus.OK);
+        CourseDTO course = service.findById(id);
+        return (course == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(course, HttpStatus.OK);
     }
 
     @GetMapping("courses/professor/{id}")
-    public ResponseEntity<List<CourseDTO>> findCourseByProffessorID(@PathVariable Integer id) {
-        List<Course> courses = repo.findCourseByProfessorID(id);
-        List<CourseDTO> coursesDTO = conv.entityToDTO(courses);
-        if (coursesDTO == null) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(coursesDTO, HttpStatus.OK);
+    public ResponseEntity<List<CourseDTO>> findCourseByProfessorID(@PathVariable Integer id) {
+        List<CourseDTO> coursesDTO = service.findCoursesByProfessorID(id);
+        return getListResponseEntity(coursesDTO);
     }
 
     @GetMapping("courses/professor/null")
-    public ResponseEntity<List<CourseDTO>> findCourseWhereProffessorIsNull() {
-        List<Course> courses = repo.findCourseWhereProfessorIsNull();
-        List<CourseDTO> coursesDTO = conv.entityToDTO(courses);
-        if (coursesDTO == null) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(coursesDTO, HttpStatus.OK);
+    public ResponseEntity<List<CourseDTO>> findCourseWhereProfessorIsNull() {
+        List<CourseDTO> coursesDTO = service.findCoursesWhereProfessorIsNull();
+        return getListResponseEntity(coursesDTO);
     }
 
     // UPDATE
-    @PutMapping(path = "/course/{id}", consumes = { "application/json" })
+    @PutMapping(path = "/course/{id}", consumes = {"application/json"})
     public ResponseEntity<CourseDTO> updateCourse(@RequestBody CourseDTO dto, @PathVariable Integer id) {
-        Course course = repo.findById(id).orElse(new Course());
-        course.setId(id);
-        course.setName(dto.getName());
-        course = repo.save(course);
-        CourseDTO courseDTO = conv.entityToDTO(course);
+        CourseDTO courseDTO = service.update(dto);
         return (courseDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(courseDTO, HttpStatus.OK);
     }
@@ -92,11 +62,20 @@ public class CourseController {
     // DELETE
     @DeleteMapping("/course/{id}")
     public ResponseEntity<CourseDTO> deleteCourse(@PathVariable Integer id) {
-        Course course = repo.getOne(id);
-        CourseDTO deleted = conv.entityToDTO(course);
-        repo.delete(course);
-        return (deleted == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
-                : new ResponseEntity<>(deleted, HttpStatus.OK);
+        CourseDTO deleted = service.getOne(id);
+        if (deleted == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        service.delete(deleted);
+        return new ResponseEntity<>(deleted, HttpStatus.OK);
+    }
+
+    private ResponseEntity<List<CourseDTO>> getListResponseEntity(List<CourseDTO> coursesDTO) {
+        if (coursesDTO == null) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (coursesDTO.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(coursesDTO, HttpStatus.OK);
     }
 
 }

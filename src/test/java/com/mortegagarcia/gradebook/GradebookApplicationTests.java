@@ -1,9 +1,6 @@
 package com.mortegagarcia.gradebook;
 
-import java.net.URI;
-
 import com.mortegagarcia.gradebook.dto.ProfessorDTO;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,73 +13,65 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
+import java.util.Objects;
+
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class GradebookApplicationTests {
 
-	@Autowired
-	private TestRestTemplate restTest;
+    @LocalServerPort
+    int randomServerPort;
+    @Autowired
+    private TestRestTemplate restTest;
 
-	@LocalServerPort
-	int randomServerPort;
+    @Test
+    void testGetProfessorByID1Success() throws Exception {
+        final int professorID = 1;
+        final String baseUrl = "http://localhost:" + randomServerPort + "/api/professor/" + professorID;
+        URI uri = new URI(baseUrl);
+        ResponseEntity<ProfessorDTO> response = restTest.getForEntity(uri, ProfessorDTO.class);
+        System.out.println("--test-result-- " + Objects.requireNonNull(response.getBody()).getFirstName());
 
-	@Test
-	void testGetProfessorByID1Success() throws Exception {
-		// arrange
+        // assert
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(response.getBody().getFirstName()).isEqualTo("Mario");
+    }
 
-		// act
-		final int professorID = 1;
-		final String baseUrl = "http://localhost:" + randomServerPort + "/api/professor/" + professorID;
-		URI uri = new URI(baseUrl);
-		ResponseEntity<ProfessorDTO> response = restTest.getForEntity(uri, ProfessorDTO.class);
-		System.out.println("--test-result--" + response.getBody().getFirstName());
+    @Test
+    void testAddProfessorSuccess() throws Exception {
+        // act
+        final String baseUrl = "http://localhost:" + randomServerPort + "/api/professor/";
+        URI uri = new URI(baseUrl);
+        ProfessorDTO professor = new ProfessorDTO(9999, "test@email.com", "firstName", "lastName", "5555555555");
 
-		// assert
-		Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		Assertions.assertThat(response.getBody().getFirstName()).isEqualTo("Mario");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-COM-PERSIST", "true");
 
-	}
+        HttpEntity<ProfessorDTO> entity = new HttpEntity<>(professor, headers);
 
-	@Test
-	void testAddProfessorSuccess() throws Exception {
-		// arrange
+        ResponseEntity<ProfessorDTO> response = restTest.postForEntity(uri, entity, ProfessorDTO.class);
 
-		// act
-		final String baseUrl = "http://localhost:" + randomServerPort + "/api/professor/";
-		URI uri = new URI(baseUrl);
-		ProfessorDTO professor = new ProfessorDTO(9999, "test@email.com", "firstName", "lastName", "5555555555");
+        // assert
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(Objects.requireNonNull(response.getBody()).getFirstName()).isEqualTo("firstName");
+    }
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("X-COM-PERSIST", "true");
+    @Test
+    void testAddProfessorMissingHeader() throws Exception {
+        // act
+        final String baseUrl = "http://localhost:" + randomServerPort + "/api/professor/";
+        URI uri = new URI(baseUrl);
+        ProfessorDTO professor = new ProfessorDTO(9999, "test@email.com", "firstName", "lastName", "5555555555");
 
-		HttpEntity<ProfessorDTO> entity = new HttpEntity<>(professor, headers);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-COM-PERSIST", "true");
 
-		ResponseEntity<ProfessorDTO> response = restTest.postForEntity(uri, entity, ProfessorDTO.class);
+        HttpEntity<ProfessorDTO> entity = new HttpEntity<>(professor, headers);
 
-		// assert
-		Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		Assertions.assertThat(response.getBody().getFirstName()).isEqualTo("firstName");
+        ResponseEntity<ProfessorDTO> response = restTest.postForEntity(uri, entity, ProfessorDTO.class);
 
-	}
-
-	@Test
-	void testAddProfessorMissingHeader() throws Exception {
-		// arrange
-
-		// act
-		final String baseUrl = "http://localhost:" + randomServerPort + "/api/professor/";
-		URI uri = new URI(baseUrl);
-		ProfessorDTO professor = new ProfessorDTO(9999, "test@email.com", "firstName", "lastName", "5555555555");
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("X-COM-PERSIST", "true");
-
-		HttpEntity<ProfessorDTO> entity = new HttpEntity<>(professor, headers);
-
-		ResponseEntity<ProfessorDTO> response = restTest.postForEntity(uri, entity, ProfessorDTO.class);
-
-		// assert
-		Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		Assertions.assertThat(response.getBody().getFirstName()).isEqualTo("firstName");
-
-	}
+        // assert
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(Objects.requireNonNull(response.getBody()).getFirstName()).isEqualTo("firstName");
+    }
 }

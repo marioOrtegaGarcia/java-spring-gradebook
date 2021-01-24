@@ -45,7 +45,7 @@ public class LoggingAspect {
         // Pointcut Expression used to log the dto package classes
     }
 
-    @Pointcut("forControllerPackage() || forServicePackage() || forRepositoryPackage() || forDtoPackage() || forModelPackage()")
+    @Pointcut("forControllerPackage() || forServicePackage() || forDtoPackage() || forRepositoryPackage() || forModelPackage()")
     private void forAppFlow() {
         // Pointcut Expression used to log application flow
     }

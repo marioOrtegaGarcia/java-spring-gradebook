@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "assignment")
@@ -34,6 +35,7 @@ public class Assignment {
     @ManyToOne
     private Course course;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
     private List<Grade> grades;
 }

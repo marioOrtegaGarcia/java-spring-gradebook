@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.Path;
 import java.util.List;
 
 @RestController
@@ -16,7 +17,7 @@ public class AssignmentController {
     @Autowired
     private AssignmentService service;
 
-    @GetMapping("assignments")
+    @GetMapping("assignment/all")
     public ResponseEntity<List<AssignmentDTO>> getAssignments() {
         List<AssignmentDTO> assignments = service.findAll();
         return (assignments == null || assignments.size() == 0) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -32,35 +33,48 @@ public class AssignmentController {
     }
 
     // READ
-    @GetMapping("assignment/{id}")
-    public ResponseEntity<AssignmentDTO> getAssignment(@PathVariable Integer id) {
-        AssignmentDTO findByIdOrElse = service.findById(id);
+    @GetMapping("assignment/{assignmentID}")
+    public ResponseEntity<AssignmentDTO> getAssignment(@PathVariable Integer assignmentID) {
+        AssignmentDTO findByIdOrElse = service.findById(assignmentID);
         return (findByIdOrElse == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(findByIdOrElse, HttpStatus.OK);
     }
 
-    @GetMapping("assignmentByCourse/{id}")
-    public ResponseEntity<List<AssignmentDTO>> getAssignmentByCourseID(@PathVariable Integer id) {
-        List<AssignmentDTO> assignmentsDTO = service.findAssignmentByCourseID(id);
-        return (assignmentsDTO == null || assignmentsDTO.size() == 0) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(assignmentsDTO, HttpStatus.OK);
-    }
-
     // UPDATE
-    @PutMapping(path = "/assignment/{id}", consumes = {"application/json"})
-    public ResponseEntity<AssignmentDTO> updateAssignment(@RequestBody AssignmentDTO dto, @PathVariable Integer id) {
-        AssignmentDTO assignmentDTO = service.update(dto);
+    @PutMapping(path = "/assignment/", consumes = {"application/json"})
+    public ResponseEntity<AssignmentDTO> updateAssignment(@RequestBody AssignmentDTO assignmentDTO) {
+        assignmentDTO = service.update(assignmentDTO);
         return (assignmentDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(assignmentDTO, HttpStatus.OK);
     }
 
     // DELETE
-    @DeleteMapping("/assignment/{id}")
-    public ResponseEntity<AssignmentDTO> deleteAssignment(@PathVariable Integer id) {
-        AssignmentDTO deleted = service.getOne(id);
+    @DeleteMapping("/assignment/{assignmentID}")
+    public ResponseEntity<AssignmentDTO> deleteAssignment(@PathVariable Integer assignmentID) {
+        AssignmentDTO deleted = service.getOne(assignmentID);
         if (deleted == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         service.delete(deleted);
         return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 
+    @GetMapping("assignment/{assignmentID}/grade/min")
+    public ResponseEntity<Double> getAssignmentMinimumGrade(@PathVariable Integer assignmentID) {
+        Double minimumAssignmentGrade = service.getAssignmentMinimumGrade(assignmentID);
+        return (minimumAssignmentGrade == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(minimumAssignmentGrade, HttpStatus.OK);
+    }
+
+    @GetMapping("assignment/{assignmentID}/grade/avg")
+    public ResponseEntity<Double> getAssignmentAverageGrade(@PathVariable Integer assignmentID) {
+        Double minimumAssignmentGrade = service.getAssignmentAverageGrade(assignmentID);
+        return (minimumAssignmentGrade == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(minimumAssignmentGrade, HttpStatus.OK);
+    }
+
+    @GetMapping("assignment/{assignmentID}/grade/max")
+    public ResponseEntity<Double> getAssignmentMaximumGrade(@PathVariable Integer assignmentID) {
+        Double minimumAssignmentGrade = service.getAssignmentMaximumGrade(assignmentID);
+        return (minimumAssignmentGrade == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+                : new ResponseEntity<>(minimumAssignmentGrade, HttpStatus.OK);
+    }
 }

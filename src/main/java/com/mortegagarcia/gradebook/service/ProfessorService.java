@@ -15,7 +15,7 @@ import java.util.List;
 public class ProfessorService {
 
     @Autowired
-    private ProfessorRepository repo;
+    private ProfessorRepository professorRepository;
 
     @Autowired
     private CourseRepository cRepo;
@@ -24,31 +24,31 @@ public class ProfessorService {
     private ProfessorConverter conv;
 
     public List<ProfessorDTO> findAll() {
-        List<Professor> professorEntities = repo.findAll();
+        List<Professor> professorEntities = professorRepository.findAll();
         return conv.entityToDTO(professorEntities);
     }
 
     public ProfessorDTO save(ProfessorDTO professorDTO) {
-        Professor professorEntity = repo.findById(professorDTO.getId()).orElse(null);
+        Professor professorEntity = professorRepository.findById(professorDTO.getId()).orElse(null);
         if (professorEntity == null) professorEntity = conv.dtoToEntity(professorDTO);
-        professorEntity = repo.save(professorEntity);
+        professorEntity = professorRepository.save(professorEntity);
         return conv.entityToDTO(professorEntity);
     }
 
     public ProfessorDTO findById(Integer id) {
-        Professor professorEntity = repo.findById(id).orElse(null);
+        Professor professorEntity = professorRepository.findById(id).orElse(null);
         return conv.entityToDTO(professorEntity);
     }
 
     public ProfessorDTO getOne(Integer id) {
-        Professor professorEntity = repo.getOne(id);
+        Professor professorEntity = professorRepository.getOne(id);
         return conv.entityToDTO(professorEntity);
     }
 
     public void delete(ProfessorDTO professorDTO) {
-        Professor professorEntity = repo.findById(professorDTO.getId()).orElse(null);
+        Professor professorEntity = professorRepository.findById(professorDTO.getId()).orElse(null);
         if (professorEntity == null) return;
-        repo.delete(professorEntity);
+        professorRepository.delete(professorEntity);
     }
 
     public void deleteCoursesByProfessor(ProfessorDTO professorDTO) {
@@ -59,13 +59,16 @@ public class ProfessorService {
     }
 
     public ProfessorDTO update(ProfessorDTO professorDTO) {
-        Professor professorEntity = repo.findById(professorDTO.getId()).orElse(null);
-        if (professorEntity == null) return null;
-        professorEntity.setFirstName(professorDTO.getFirstName());
-        professorEntity.setLastName(professorDTO.getLastName());
-        professorEntity.setEmail(professorDTO.getEmail());
-        professorEntity.setPhoneNumber(professorDTO.getPhoneNumber());
-        professorEntity = repo.save(professorEntity);
+        Professor professorEntity = professorRepository.findById(professorDTO.getId()).orElse(null);
+        if (professorEntity == null) {
+            professorEntity = conv.dtoToEntity(professorDTO);
+        } else {
+            professorEntity.setFirstName(professorDTO.getFirstName());
+            professorEntity.setLastName(professorDTO.getLastName());
+            professorEntity.setEmail(professorDTO.getEmail());
+            professorEntity.setPhoneNumber(professorDTO.getPhoneNumber());
+        }
+        professorEntity = professorRepository.save(professorEntity);
         return conv.entityToDTO(professorEntity);
     }
 }

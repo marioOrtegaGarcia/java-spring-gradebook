@@ -16,7 +16,7 @@ public class ProfessorController {
     @Autowired
     private ProfessorService service;
 
-    @GetMapping("professors")
+    @GetMapping("professor/all")
     public ResponseEntity<List<ProfessorDTO>> getProfessors() {
         List<ProfessorDTO> professorsDTO = service.findAll();
         return (professorsDTO == null || professorsDTO.size() == 0) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -32,25 +32,25 @@ public class ProfessorController {
     }
 
     // READ
-    @GetMapping("professor/{id}")
-    public ResponseEntity<ProfessorDTO> getProfessor(@PathVariable Integer id) {
-        ProfessorDTO professorDTO = service.findById(id);
+    @GetMapping("professor/{professorID}")
+    public ResponseEntity<ProfessorDTO> getProfessor(@PathVariable Integer professorID) {
+        ProfessorDTO professorDTO = service.findById(professorID);
         return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(professorDTO, HttpStatus.OK);
     }
 
     // UPDATE
-    @PutMapping(path = "/professor/{id}", consumes = {"application/json"})
-    public ResponseEntity<ProfessorDTO> updateProfessor(@RequestBody ProfessorDTO dto, @PathVariable Integer id) {
+    @PutMapping(path = "/professor/", consumes = {"application/json"})
+    public ResponseEntity<ProfessorDTO> updateProfessor(@RequestBody ProfessorDTO dto) {
         ProfessorDTO professorDTO = service.update(dto);
         return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(professorDTO, HttpStatus.OK);
     }
 
     // DELETE
-    @DeleteMapping("/professor/{id}")
-    public ResponseEntity<ProfessorDTO> deleteProfessor(@PathVariable Integer id) {
-        ProfessorDTO deleted = service.getOne(id);
+    @DeleteMapping("/professor/{professorID}")
+    public ResponseEntity<ProfessorDTO> deleteProfessor(@PathVariable Integer professorID) {
+        ProfessorDTO deleted = service.getOne(professorID);
         if (deleted == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         service.deleteCoursesByProfessor(deleted);
         service.delete(deleted);

@@ -16,7 +16,7 @@ public class GradeController {
     @Autowired
     private GradeService service;
 
-    @GetMapping("grades")
+    @GetMapping("grade/all")
     public ResponseEntity<List<GradeDTO>> getGrades() {
         List<GradeDTO> gradesDTO = service.findAll();
         return (gradesDTO == null || gradesDTO.size() == 0) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -32,53 +32,24 @@ public class GradeController {
     }
 
     // READ
-    @GetMapping("grade/{id}")
-    public ResponseEntity<GradeDTO> getGrade(@PathVariable Integer id) {
-        GradeDTO gradeDTO = service.findById(id);
+    @GetMapping("grade/{gradeID}")
+    public ResponseEntity<GradeDTO> getGrade(@PathVariable Integer gradeID) {
+        GradeDTO gradeDTO = service.findById(gradeID);
         return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
     }
 
-    @GetMapping(value = "grades/assignment/{id}")
-    public ResponseEntity<List<GradeDTO>> getGradeByAssignmentID(@PathVariable Integer id) {
-        List<GradeDTO> gradesDTO = service.findGradeByAssignmentID(id);
-        return (gradesDTO == null || gradesDTO.size() == 0) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(gradesDTO, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "grades/assignment/{id}/avg")
-    public ResponseEntity<Double> getAssignmentAverageScore(@PathVariable Integer id) {
-        Double averageScore = service.findAssignmentAverageScore(id);
-        return (averageScore == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
-                : new ResponseEntity<>(averageScore, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "grades/assignment/{id}/max")
-    public ResponseEntity<Double> getAssignmentMaximumScore(@PathVariable Integer id) {
-        Double averageScore = service.findAssignmentMaximumScore(id);
-        return (averageScore == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
-                : new ResponseEntity<>(averageScore, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "grades/assignment/{id}/min")
-    public ResponseEntity<Double> getAssignmentMinimumScore(@PathVariable Integer id) {
-        Double averageScore = service.findAssignmentMinimumScore(id);
-        return (averageScore == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
-                : new ResponseEntity<>(averageScore, HttpStatus.OK);
-    }
-
-    // UPDATE
-    @PutMapping(path = "/grade/{id}", consumes = {"application/json"})
-    public ResponseEntity<GradeDTO> updateGrade(@RequestBody GradeDTO dto, @PathVariable Integer id) {
+    @PutMapping(path = "/grade/", consumes = {"application/json"})
+    public ResponseEntity<GradeDTO> updateGrade(@RequestBody GradeDTO dto) {
         GradeDTO gradeDTO = service.update(dto);
         return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
     }
 
     // DELETE
-    @DeleteMapping("/grade/{id}")
-    public ResponseEntity<GradeDTO> deleteGrade(@PathVariable Integer id) {
-        GradeDTO deleted = service.getOne(id);
+    @DeleteMapping("/grade/{gradeID}")
+    public ResponseEntity<GradeDTO> deleteGrade(@PathVariable Integer gradeID) {
+        GradeDTO deleted = service.getOne(gradeID);
         if (deleted == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         service.delete(deleted);
         return new ResponseEntity<>(deleted, HttpStatus.OK);

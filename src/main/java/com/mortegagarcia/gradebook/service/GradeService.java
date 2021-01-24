@@ -4,8 +4,14 @@ import com.mortegagarcia.gradebook.converter.AssignmentConverter;
 import com.mortegagarcia.gradebook.converter.GradeConverter;
 import com.mortegagarcia.gradebook.converter.StudentConverter;
 import com.mortegagarcia.gradebook.dto.GradeDTO;
+import com.mortegagarcia.gradebook.model.Assignment;
+import com.mortegagarcia.gradebook.model.Course;
 import com.mortegagarcia.gradebook.model.Grade;
+import com.mortegagarcia.gradebook.model.Student;
+import com.mortegagarcia.gradebook.repository.AssignmentRepository;
+import com.mortegagarcia.gradebook.repository.CourseRepository;
 import com.mortegagarcia.gradebook.repository.GradeRepository;
+import com.mortegagarcia.gradebook.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,69 +21,69 @@ import java.util.List;
 public class GradeService {
 
     @Autowired
-    private GradeRepository repo;
+    private GradeRepository gradeRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private AssignmentRepository assignmentRepository;
 
     @Autowired
     private GradeConverter gConv;
 
-    @Autowired
-    private StudentConverter sConv;
-
-    @Autowired
-    private AssignmentConverter aConv;
-
     public List<GradeDTO> findAll() {
-        List<Grade> gradeEntities = repo.findAll();
+        List<Grade> gradeEntities = gradeRepository.findAll();
         return gConv.entityToDTO(gradeEntities);
     }
 
     public GradeDTO save(GradeDTO gradeDTO) {
-        Grade gradeEntity = repo.findById(gradeDTO.getId()).orElse(null);
-        if(gradeEntity == null) gradeEntity = gConv.dtoToEntity(gradeDTO);
-        gradeEntity = repo.save(gradeEntity);
+        Grade gradeEntity = gradeRepository.findById(gradeDTO.getId()).orElse(null);
+        if (gradeEntity == null) gradeEntity = gConv.dtoToEntity(gradeDTO);
+
+        Student studentEntity = studentRepository.findById(gradeDTO.getStudentID()).orElse(null);
+        if (studentEntity == null) return null;
+        Assignment assignmentEntity = assignmentRepository.findById(gradeDTO.getAssignmentID()).orElse(null);
+        if (assignmentEntity == null) return null;
+
+        gradeEntity.setStudent(studentEntity);
+        gradeEntity.setAssignment(assignmentEntity);
+
+        gradeEntity = gradeRepository.save(gradeEntity);
         return gConv.entityToDTO(gradeEntity);
     }
 
     public GradeDTO getOne(int id) {
-        Grade gradeEntity = repo.getOne(id);
+        Grade gradeEntity = gradeRepository.getOne(id);
         return gConv.entityToDTO(gradeEntity);
     }
 
     public GradeDTO findById(Integer id) {
-        Grade gradeEntity = repo.findById(id).orElse(null);
+        Grade gradeEntity = gradeRepository.findById(id).orElse(null);
         return gConv.entityToDTO(gradeEntity);
     }
 
-    public List<GradeDTO> findGradeByAssignmentID(Integer id) {
-        List<Grade> gradeEntities = repo.findGradeByAssignmentID(id);
-        return gConv.entityToDTO(gradeEntities);
-    }
-
-    public Double findAssignmentAverageScore(Integer id) {
-        return repo.findAssignmentAverageScore(id);
-    }
-
-    public Double findAssignmentMaximumScore(Integer id) {
-        return repo.findAssignmentMaximumScore(id);
-    }
-
-    public Double findAssignmentMinimumScore(Integer id) {
-        return repo.findAssignmentMinimumScore(id);
-    }
-
     public void delete(GradeDTO gradeDTO) {
-        Grade gradeEntity = repo.findById(gradeDTO.getId()).orElse(null);
+        Grade gradeEntity = gradeRepository.findById(gradeDTO.getId()).orElse(null);
         if (gradeEntity == null) return;
-        repo.delete(gradeEntity);
+        gradeRepository.delete(gradeEntity);
     }
 
     public GradeDTO update(GradeDTO dto) {
-        Grade gradeEntity = repo.findById(dto.getId()).orElse(null);
-        if (gradeEntity == null) return null;
+        Grade gradeEntity = gradeRepository.findById(dto.getId()).orElse(null);
+        if (gradeEntity == null) gradeEntity = gConv.dtoToEntity(dto);
+
+        Student studentEntity = studentRepository.findById(dto.getStudentID()).orElse(null);
+        Assignment assignmentEntity = assignmentRepository.findById(dto.getAssignmentID()).orElse(null);
+
+        if(studentEntity == null || assignmentEntity == null) return null;
+        Course courseEntity = assignmentEntity.getCourse();
+        if(!courseEntity.getAssignments().contains(assignmentEntity) || !courseEntity.getStudents().contains(studentEntity)) return null;
+
         gradeEntity.setScore(dto.getScore());
-        gradeEntity.setStudent(sConv.dtoToEntity(dto.getStudent()));
-        gradeEntity.setAssignment(aConv.dtoToEntity(dto.getAssignment()));
-        gradeEntity = repo.save(gradeEntity);
+        gradeEntity.setStudent(studentEntity);
+        gradeEntity.setAssignment(assignmentEntity);
+        gradeEntity = gradeRepository.save(gradeEntity);
         return gConv.entityToDTO(gradeEntity);
     }
 }

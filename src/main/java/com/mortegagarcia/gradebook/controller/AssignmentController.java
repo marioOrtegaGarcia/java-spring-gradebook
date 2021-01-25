@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.Path;
 import java.util.List;
 
 @RestController
@@ -41,9 +40,9 @@ public class AssignmentController {
     }
 
     // UPDATE
-    @PutMapping(path = "/assignment/", consumes = {"application/json"})
-    public ResponseEntity<AssignmentDTO> updateAssignment(@RequestBody AssignmentDTO assignmentDTO) {
-        assignmentDTO = service.update(assignmentDTO);
+    @PutMapping(path = "/assignment/{{assignmentID}}", consumes = {"application/json"})
+    public ResponseEntity<AssignmentDTO> updateAssignment(@RequestBody AssignmentDTO assignmentDTO, @PathVariable Integer assignmentID) {
+        assignmentDTO = service.update(assignmentID, assignmentDTO);
         return (assignmentDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(assignmentDTO, HttpStatus.OK);
     }

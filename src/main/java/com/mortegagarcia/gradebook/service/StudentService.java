@@ -1,9 +1,12 @@
 package com.mortegagarcia.gradebook.service;
 
+import com.mortegagarcia.gradebook.converter.AssignmentConverter;
 import com.mortegagarcia.gradebook.converter.GradeConverter;
 import com.mortegagarcia.gradebook.converter.StudentConverter;
+import com.mortegagarcia.gradebook.dto.AssignmentDTO;
 import com.mortegagarcia.gradebook.dto.GradeDTO;
 import com.mortegagarcia.gradebook.dto.StudentDTO;
+import com.mortegagarcia.gradebook.model.Assignment;
 import com.mortegagarcia.gradebook.model.Grade;
 import com.mortegagarcia.gradebook.model.Student;
 import com.mortegagarcia.gradebook.repository.StudentRepository;
@@ -21,6 +24,9 @@ public class StudentService {
     private StudentConverter sConv;
 
     @Autowired
+    private AssignmentConverter aConv;
+
+    @Autowired
     private GradeConverter gConv;
 
     public List<StudentDTO> findAll() {
@@ -29,9 +35,7 @@ public class StudentService {
     }
 
     public StudentDTO save(StudentDTO studentDTO) {
-        Student studentEntity = studentRepository.findById(studentDTO.getId()).orElse(null);
-        if (studentEntity == null) studentEntity = sConv.dtoToEntity(studentDTO);
-        studentEntity = studentRepository.save(studentEntity);
+        Student studentEntity = saveNewEntity(studentDTO);
         return sConv.entityToDTO(studentEntity);
     }
 
@@ -41,24 +45,21 @@ public class StudentService {
     }
 
     public StudentDTO findById(Integer id) {
-        Student studentEntity = studentRepository.findById(id).orElse(null);
+        Student studentEntity = studentRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
         return sConv.entityToDTO(studentEntity);
     }
 
     public void delete(StudentDTO studentDTO) {
-        Student studentEntity = studentRepository.findById(studentDTO.getId()).orElse(null);
-        if (studentEntity == null) return;
+        Student studentEntity = studentRepository.findById(studentDTO.getId())
+                .orElseThrow(IllegalArgumentException::new);
         studentRepository.delete(studentEntity);
     }
 
-    public StudentDTO update(StudentDTO studentDTO) {
-        Student studentEntity = studentRepository.findById(studentDTO.getId()).orElse(null);
-        if (studentEntity == null) studentEntity = sConv.dtoToEntity(studentDTO);
-        studentEntity.setFirstName(studentDTO.getFirstName());
-        studentEntity.setLastName(studentDTO.getLastName());
-        studentEntity.setGradeLevel(studentDTO.getGradeLevel());
-        studentEntity.setEmail(studentDTO.getEmail());
-        studentEntity = studentRepository.save(studentEntity);
+    public StudentDTO update(Integer studentID, StudentDTO studentDTO) {
+        Student studentEntity = studentRepository.findById(studentID).orElse(null);
+        if (studentEntity == null) studentEntity = saveNewEntity(studentDTO);
+        else studentEntity = saveExistingEntity(studentEntity, studentDTO);
         return sConv.entityToDTO(studentEntity);
     }
 
@@ -69,5 +70,26 @@ public class StudentService {
 
     public Character getStudentAssignmentLetterGrade(Integer studentID, Integer assignmentID) {
         return studentRepository.getStudentAssignmentLetterGrade(studentID, assignmentID);
+    }
+
+    private Student saveExistingEntity(Student studentEntity, StudentDTO studentDTO) {
+        studentEntity.setFirstName(studentDTO.getFirstName());
+        studentEntity.setLastName(studentDTO.getLastName());
+        studentEntity.setGradeLevel(studentDTO.getGradeLevel());
+        studentEntity.setEmail(studentDTO.getEmail());
+        studentEntity = studentRepository.save(studentEntity);
+        return studentEntity;
+    }
+
+    private Student saveNewEntity(StudentDTO studentDTO) {
+        Student studentEntity = sConv.dtoToEntity(studentDTO);
+        studentEntity = studentRepository.save(studentEntity);
+        return studentEntity;
+    }
+
+    public List<AssignmentDTO> getStudentAssignmentsMissingGrade(Integer studentID) {
+        List<Assignment> assignment = studentRepository.findAllByIdAndMissingAssignments(studentID)
+                .orElseThrow(IllegalArgumentException::new);
+        return aConv.entityToDTO(assignment);
     }
 }

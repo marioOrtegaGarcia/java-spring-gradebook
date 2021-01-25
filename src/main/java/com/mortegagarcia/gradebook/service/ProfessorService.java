@@ -2,7 +2,6 @@ package com.mortegagarcia.gradebook.service;
 
 import com.mortegagarcia.gradebook.converter.ProfessorConverter;
 import com.mortegagarcia.gradebook.dto.ProfessorDTO;
-import com.mortegagarcia.gradebook.model.Course;
 import com.mortegagarcia.gradebook.model.Professor;
 import com.mortegagarcia.gradebook.repository.CourseRepository;
 import com.mortegagarcia.gradebook.repository.ProfessorRepository;
@@ -18,7 +17,7 @@ public class ProfessorService {
     private ProfessorRepository professorRepository;
 
     @Autowired
-    private CourseRepository cRepo;
+    private CourseRepository courseRepository;
 
     @Autowired
     private ProfessorConverter conv;
@@ -29,14 +28,13 @@ public class ProfessorService {
     }
 
     public ProfessorDTO save(ProfessorDTO professorDTO) {
-        Professor professorEntity = professorRepository.findById(professorDTO.getId()).orElse(null);
-        if (professorEntity == null) professorEntity = conv.dtoToEntity(professorDTO);
-        professorEntity = professorRepository.save(professorEntity);
+        Professor professorEntity = saveNewEntity(professorDTO);
         return conv.entityToDTO(professorEntity);
     }
 
     public ProfessorDTO findById(Integer id) {
-        Professor professorEntity = professorRepository.findById(id).orElse(null);
+        Professor professorEntity = professorRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
         return conv.entityToDTO(professorEntity);
     }
 
@@ -46,29 +44,35 @@ public class ProfessorService {
     }
 
     public void delete(ProfessorDTO professorDTO) {
-        Professor professorEntity = professorRepository.findById(professorDTO.getId()).orElse(null);
-        if (professorEntity == null) return;
+        Professor professorEntity = professorRepository.findById(professorDTO.getId())
+                .orElseThrow(IllegalArgumentException::new);
         professorRepository.delete(professorEntity);
     }
 
     public void deleteCoursesByProfessor(ProfessorDTO professorDTO) {
-        List<Course> courseEntities = cRepo.findCoursesByProfessorID(professorDTO.getId());
-        for (Course courseEntity : courseEntities) {
-            cRepo.delete(courseEntity);
-        }
+        courseRepository.deleteCourseByProfessorId(professorDTO.getId());
     }
 
-    public ProfessorDTO update(ProfessorDTO professorDTO) {
-        Professor professorEntity = professorRepository.findById(professorDTO.getId()).orElse(null);
-        if (professorEntity == null) {
-            professorEntity = conv.dtoToEntity(professorDTO);
-        } else {
-            professorEntity.setFirstName(professorDTO.getFirstName());
-            professorEntity.setLastName(professorDTO.getLastName());
-            professorEntity.setEmail(professorDTO.getEmail());
-            professorEntity.setPhoneNumber(professorDTO.getPhoneNumber());
-        }
-        professorEntity = professorRepository.save(professorEntity);
+    public ProfessorDTO update(Integer professorID, ProfessorDTO professorDTO) {
+        Professor professorEntity = professorRepository.findById(professorID).orElse(null);
+        if (professorEntity == null) professorEntity = saveNewEntity(professorDTO);
+        else professorEntity = saveExistingEntity(professorEntity, professorDTO);
         return conv.entityToDTO(professorEntity);
     }
+
+    private Professor saveExistingEntity(Professor professorEntity, ProfessorDTO professorDTO) {
+        professorEntity.setFirstName(professorDTO.getFirstName());
+        professorEntity.setLastName(professorDTO.getLastName());
+        professorEntity.setEmail(professorDTO.getEmail());
+        professorEntity.setPhoneNumber(professorDTO.getPhoneNumber());
+        professorEntity = professorRepository.save(professorEntity);
+        return professorEntity;
+    }
+
+    private Professor saveNewEntity(ProfessorDTO professorDTO) {
+        Professor professorEntity = conv.dtoToEntity(professorDTO);
+        professorEntity = professorRepository.save(professorEntity);
+        return professorEntity;
+    }
+
 }

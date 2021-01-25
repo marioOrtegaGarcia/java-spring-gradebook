@@ -1,29 +1,22 @@
 package com.mortegagarcia.gradebook.model;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.persistence.*;
+import java.util.List;
+
 @Entity
 @Table(name = "assignment")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(value = { "grades", "course" })
+@JsonIgnoreProperties(value = {"grades", "course"})
 public class Assignment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -38,4 +31,5 @@ public class Assignment {
     @ToString.Exclude
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
     private List<Grade> grades;
+
 }

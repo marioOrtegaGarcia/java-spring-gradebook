@@ -34,21 +34,12 @@ public class AssignmentService {
     }
 
     public AssignmentDTO save(AssignmentDTO assignmentDTO) {
-        Assignment assignmentEntity = assignmentRepository.findById(assignmentDTO.getId()).orElse(null);
-        if (assignmentEntity == null) assignmentEntity = aConv.dtoToEntity(assignmentDTO);
-        Course course = courseRepository.findById(assignmentDTO.getCourseID()).orElse(null);
-        if(course == null) return null;
-        assignmentEntity.setCourse(course);
-        try {
-            assignmentEntity = assignmentRepository.save(assignmentEntity);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+        Assignment assignmentEntity = saveNewEntity(assignmentDTO);
         return aConv.entityToDTO(assignmentEntity);
     }
 
     public AssignmentDTO findById(Integer id) {
-        Assignment assignmentEntity = assignmentRepository.findById(id).orElse(null);
+        Assignment assignmentEntity = assignmentRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return aConv.entityToDTO(assignmentEntity);
     }
 
@@ -57,24 +48,21 @@ public class AssignmentService {
         return aConv.entityToDTO(assignmentEntities);
     }
 
+    public List<AssignmentDTO> findAssignmentsByStudentID(Integer id) {
+        List<Assignment> assignmentEntities = assignmentRepository.findAssignmentsByStudentID(id);
+        return aConv.entityToDTO(assignmentEntities);
+    }
+
     public void delete(AssignmentDTO assignmentDTO) {
-        Assignment assignment = assignmentRepository.findById(assignmentDTO.getId()).orElse(null);
-        if (assignment == null) return;
+        Assignment assignment = assignmentRepository.findById(assignmentDTO.getId())
+                .orElseThrow(IllegalArgumentException::new);
         assignmentRepository.delete(assignment);
     }
 
-    public AssignmentDTO update(AssignmentDTO assignmentDTO) {
-        Assignment assignmentEntity = assignmentRepository.findById(assignmentDTO.getId()).orElse(null);
-        if (assignmentEntity == null) {
-            assignmentEntity = aConv.dtoToEntity(assignmentDTO);
-        } else {
-            assignmentEntity.setName(assignmentDTO.getName());
-            assignmentEntity.setPossibleScore(assignmentDTO.getPossibleScore());
-        }
-        Course course = courseRepository.findById(assignmentDTO.getCourseID()).orElse(null);
-        if(course == null) return null;
-        assignmentEntity.setCourse(course);
-        assignmentEntity = assignmentRepository.save(assignmentEntity);
+    public AssignmentDTO update(Integer assignmentID, AssignmentDTO assignmentDTO) {
+        Assignment assignmentEntity = assignmentRepository.findById(assignmentID).orElse(null);
+        if (assignmentEntity == null) assignmentEntity = saveNewEntity(assignmentDTO);
+        else assignmentEntity = saveExistingEntity(assignmentEntity, assignmentDTO);
         return aConv.entityToDTO(assignmentEntity);
     }
 
@@ -88,6 +76,27 @@ public class AssignmentService {
 
     public Double getAssignmentMaximumGrade(Integer assignmentID) {
         return assignmentRepository.getAssignmentMaximumGrade(assignmentID);
+    }
+
+    private Assignment saveExistingEntity(Assignment assignmentEntity, AssignmentDTO assignmentDTO) {
+        assignmentEntity.setName(assignmentDTO.getName());
+        assignmentEntity.setPossibleScore(assignmentDTO.getPossibleScore());
+        if (assignmentEntity.getCourse().getId() != assignmentDTO.getCourseID()) {
+            Course courseEntity = courseRepository.findById(assignmentDTO.getCourseID())
+                    .orElseThrow(IllegalArgumentException::new);
+            assignmentEntity.setCourse(courseEntity);
+        }
+        assignmentEntity = assignmentRepository.save(assignmentEntity);
+        return assignmentEntity;
+    }
+
+    private Assignment saveNewEntity(AssignmentDTO assignmentDTO) {
+        Assignment assignmentEntity = aConv.dtoToEntity(assignmentDTO);
+        Course courseEntity = courseRepository.findById(assignmentDTO.getCourseID())
+                .orElseThrow(IllegalArgumentException::new);
+        assignmentEntity.setCourse(courseEntity);
+        assignmentEntity = assignmentRepository.save(assignmentEntity);
+        return assignmentEntity;
     }
 
 }

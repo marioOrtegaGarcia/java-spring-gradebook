@@ -1,14 +1,12 @@
 package com.mortegagarcia.gradebook.converter;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.mortegagarcia.gradebook.dto.AssignmentDTO;
 import com.mortegagarcia.gradebook.model.Assignment;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class AssignmentConverter {

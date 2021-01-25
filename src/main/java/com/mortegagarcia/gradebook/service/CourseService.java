@@ -30,9 +30,7 @@ public class CourseService {
     }
 
     public CourseDTO save(CourseDTO courseDTO) {
-        Course courseEntity = courseRepository.findById(courseDTO.getId()).orElse(null);
-        if (courseEntity == null) courseEntity = cConv.dtoToEntity(courseDTO);
-        courseEntity = courseRepository.save(courseEntity);
+        Course courseEntity = saveNewEntity(courseDTO);
         return cConv.entityToDTO(courseEntity);
     }
 
@@ -42,12 +40,14 @@ public class CourseService {
     }
 
     public CourseDTO findById(Integer id) {
-        Course courseEntity = courseRepository.findById(id).orElse(null);
+        Course courseEntity = courseRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
         return cConv.entityToDTO(courseEntity);
     }
 
     public List<CourseDTO> findCoursesByProfessorID(Integer id) {
-        List<Course> courseEntities = courseRepository.findCoursesByProfessorID(id);
+        List<Course> courseEntities = courseRepository.findCoursesByProfessorID(id)
+                .orElseThrow(IllegalArgumentException::new);
         return cConv.entityToDTO(courseEntities);
     }
 
@@ -57,17 +57,15 @@ public class CourseService {
     }
 
     public void delete(CourseDTO courseDTO) {
-        Course courseEntity = courseRepository.findById(courseDTO.getId()).orElse(null);
-        if(courseEntity == null) return;
+        Course courseEntity = courseRepository.findById(courseDTO.getId())
+                .orElseThrow(IllegalArgumentException::new);
         courseRepository.delete(courseEntity);
     }
 
-    public CourseDTO update(CourseDTO courseDTO) {
-        Course courseEntity = courseRepository.findById(courseDTO.getId()).orElse(null);
-        if (courseEntity == null) return null;
-        courseEntity.setName(courseDTO.getName());
-        courseEntity.setAssignments(aConv.dtoToEntity(courseDTO.getAssignments()));
-        courseEntity = courseRepository.save(courseEntity);
+    public CourseDTO update(Integer courseID, CourseDTO courseDTO) {
+        Course courseEntity = courseRepository.findById(courseID).orElse(null);
+        if (courseEntity == null) courseEntity = saveNewEntity(courseDTO);
+        else courseEntity = saveExistingEntity(courseEntity, courseDTO);
         return cConv.entityToDTO(courseEntity);
     }
 
@@ -86,4 +84,18 @@ public class CourseService {
         courseRepository.deleteCourseAssignments(courseID);
         return assignmentDTOS;
     }
+
+    private Course saveExistingEntity(Course courseEntity, CourseDTO courseDTO) {
+        courseEntity.setName(courseDTO.getName());
+        courseEntity.setAssignments(aConv.dtoToEntity(courseDTO.getAssignments()));
+        courseEntity = courseRepository.save(courseEntity);
+        return courseEntity;
+    }
+
+    private Course saveNewEntity(CourseDTO courseDTO) {
+        Course courseEntity = cConv.dtoToEntity(courseDTO);
+        courseEntity = courseRepository.save(courseEntity);
+        return courseEntity;
+    }
+
 }

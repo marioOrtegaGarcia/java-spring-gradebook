@@ -1,22 +1,20 @@
 package com.mortegagarcia.gradebook.repository;
 
-import java.util.List;
-
 import com.mortegagarcia.gradebook.model.Assignment;
 import com.mortegagarcia.gradebook.model.Course;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Null;
+import java.util.List;
+import java.util.Optional;
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     @Query("SELECT c FROM Course c WHERE c.professor.id = :professorID")
-    List<Course> findCoursesByProfessorID(@Param("professorID") Integer id);
+    Optional<List<Course>> findCoursesByProfessorID(@Param("professorID") Integer id);
 
     @Query("SELECT c FROM Course c WHERE c.professor = NULL")
     List<Course> findCoursesWhereProfessorIsNull();
@@ -31,4 +29,9 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Modifying
     @Query("DELETE FROM Assignment a WHERE a.course.id = :courseID")
     void deleteCourseAssignments(Integer courseID);
+
+    @Transactional
+    @Modifying
+    void deleteCourseByProfessorId(Integer courseID);
+
 }

@@ -75,9 +75,9 @@ public class CourseController {
 
 
     // UPDATE
-    @PutMapping(path = "/course/", consumes = {"application/json"})
-    public ResponseEntity<CourseDTO> updateCourse(@RequestBody CourseDTO courseDTO) {
-        courseDTO = service.update(courseDTO);
+    @PutMapping(path = "/course/{{professorID}}", consumes = {"application/json"})
+    public ResponseEntity<CourseDTO> updateCourse(@RequestBody CourseDTO courseDTO, @PathVariable Integer professorID) {
+        courseDTO = service.update(professorID, courseDTO);
         return (courseDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(courseDTO, HttpStatus.OK);
     }

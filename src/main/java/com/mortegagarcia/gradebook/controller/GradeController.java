@@ -39,9 +39,9 @@ public class GradeController {
                 : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
     }
 
-    @PutMapping(path = "/grade/", consumes = {"application/json"})
-    public ResponseEntity<GradeDTO> updateGrade(@RequestBody GradeDTO dto) {
-        GradeDTO gradeDTO = service.update(dto);
+    @PutMapping(path = "/grade/{{gradeID}}", consumes = {"application/json"})
+    public ResponseEntity<GradeDTO> updateGrade(@RequestBody GradeDTO dto, @PathVariable Integer gradeID) {
+        GradeDTO gradeDTO = service.update(gradeID, dto);
         return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
     }

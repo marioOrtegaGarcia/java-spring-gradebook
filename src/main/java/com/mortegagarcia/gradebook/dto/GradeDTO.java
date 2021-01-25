@@ -10,15 +10,13 @@ import lombok.NoArgsConstructor;
 public class GradeDTO {
 
     private int id;
-
     private int score;
-
     private int studentID;
-
     private int assignmentID;
 
-//    private StudentDTO student;
-
-//    private AssignmentDTO assignment;
-
+    public GradeDTO(int score, int studentID, int assignmentID) {
+        this.score = score;
+        this.studentID = studentID;
+        this.assignmentID = assignmentID;
+    }
 }

@@ -40,9 +40,9 @@ public class ProfessorController {
     }
 
     // UPDATE
-    @PutMapping(path = "/professor/", consumes = {"application/json"})
-    public ResponseEntity<ProfessorDTO> updateProfessor(@RequestBody ProfessorDTO dto) {
-        ProfessorDTO professorDTO = service.update(dto);
+    @PutMapping(path = "/professor/{{professorID}}", consumes = {"application/json"})
+    public ResponseEntity<ProfessorDTO> updateProfessor(@RequestBody ProfessorDTO dto, @PathVariable Integer professorID) {
+        ProfessorDTO professorDTO = service.update(professorID, dto);
         return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(professorDTO, HttpStatus.OK);
     }

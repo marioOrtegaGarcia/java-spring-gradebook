@@ -2,6 +2,11 @@
 
 This Gradebook API was created using the Java Spring Boot API.
 
+- [ ] Clean readme
+- [ ] Find more edge cases
+
+
+
 ## Features
 
 ## API Map
@@ -10,9 +15,9 @@ This Gradebook API was created using the Java Spring Boot API.
     - assignment/
         - /
             - POST - Create new Assignment
-            - PUT - Update existing Assignment
         - /{assignmentID}/
             - GET - Get Assignment by ID
+            - PUT - Update existing Assignment
             - DELETE - Delete Assignment by ID
             - /Grade/
                 - /Min/
@@ -26,9 +31,9 @@ This Gradebook API was created using the Java Spring Boot API.
     - course/
         - /
             - POST - Create new Course
-            - PUT - Update existing Course
         - /{courseID}/
             - GET - Get Course by ID
+            - PUT - Update existing Course
             - DELETE - Delete Course by ID
             - assignment/
                 - {ALL}
@@ -46,9 +51,9 @@ This Gradebook API was created using the Java Spring Boot API.
     - grade/
         - /
             - POST - Create new Grade
-            - PUT  - Update existing Grade
         - /{gradeID}/
             - GET - Get grade by ID
+            - PUT  - Update existing Grade
             - DELETE - Delete Grade by ID
         - /All/
             - GET - Get all grades
@@ -56,18 +61,18 @@ This Gradebook API was created using the Java Spring Boot API.
     - professor/
         - /
             - POST - Create new professor
-            - PUT - Update existing professor
         - /{professorID}/
             - GET - Get professor by id
+            - PUT - Update existing professor
             - DELETE - Delete professor by id
         - /All/
             - GET - Get all professors 
     - student/
         - /
             - POST - Create new student
-            - PUT - Update existing student
         - /{studentID}/
             - GET - Get student by id
+            - PUT - Update existing student
             - DELETE - Delete student by id
             - /assignment/
                 - {assignmentID}
@@ -82,7 +87,7 @@ This Gradebook API was created using the Java Spring Boot API.
 ## Features & Bug Fixes to Implement
 
 ### Services
-- [ ] Clean Services and make methods more efficient with SLQ calls
+- [X] Clean Services and make methods more efficient with SLQ calls
 
 ### Controllers
 
@@ -92,7 +97,7 @@ This Gradebook API was created using the Java Spring Boot API.
 - [x] Get Average, Minimum, and Maximum grade for assignment.
 - [x] Should convert entities into DTO inside of service not controller.
 - [X] Compute a course letter grade.
-- [ ] Find students missing grades for an assignment.
+- [X] Find students missing grades for an assignment.
 
 ### Hibernate
 
@@ -106,7 +111,7 @@ This Gradebook API was created using the Java Spring Boot API.
 
 ### Aspect Oriented Programming
 
-- [ ] Create Integration, Controller and Service Logs
+- [X] Create Integration, Controller and Service Logs
     - [X] Professor
     - [X] Student
     - [X] Course

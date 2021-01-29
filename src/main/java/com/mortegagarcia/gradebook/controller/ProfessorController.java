@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/professor")
 public class ProfessorController {
 
     @Autowired
     private ProfessorService service;
 
-    @GetMapping("professor/all")
+    @GetMapping("all")
     public ResponseEntity<List<ProfessorDTO>> getProfessors() {
         List<ProfessorDTO> professorsDTO = service.findAll();
         return (professorsDTO == null || professorsDTO.size() == 0) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -24,7 +24,7 @@ public class ProfessorController {
     }
 
     // CREATE
-    @PostMapping(path = "/professor", consumes = {"application/json"})
+    @PostMapping(consumes = {"application/json"})
     public ResponseEntity<ProfessorDTO> addProfessor(@RequestBody ProfessorDTO professor) {
         ProfessorDTO professorDTO = service.save(professor);
         return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -32,7 +32,7 @@ public class ProfessorController {
     }
 
     // READ
-    @GetMapping("professor/{professorID}")
+    @GetMapping("{professorID}")
     public ResponseEntity<ProfessorDTO> getProfessor(@PathVariable Integer professorID) {
         ProfessorDTO professorDTO = service.findById(professorID);
         return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -40,7 +40,7 @@ public class ProfessorController {
     }
 
     // UPDATE
-    @PutMapping(path = "/professor/{{professorID}}", consumes = {"application/json"})
+    @PutMapping(path = "{{professorID}}", consumes = {"application/json"})
     public ResponseEntity<ProfessorDTO> updateProfessor(@RequestBody ProfessorDTO dto, @PathVariable Integer professorID) {
         ProfessorDTO professorDTO = service.update(professorID, dto);
         return (professorDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -48,7 +48,7 @@ public class ProfessorController {
     }
 
     // DELETE
-    @DeleteMapping("/professor/{professorID}")
+    @DeleteMapping("{professorID}")
     public ResponseEntity<ProfessorDTO> deleteProfessor(@PathVariable Integer professorID) {
         ProfessorDTO deleted = service.getOne(professorID);
         if (deleted == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);

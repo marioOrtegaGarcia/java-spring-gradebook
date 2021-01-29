@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/student")
 public class StudentController {
 
     @Autowired
@@ -22,7 +22,7 @@ public class StudentController {
     @Autowired
     private AssignmentService assignmentService;
 
-    @GetMapping("student/all")
+    @GetMapping("all")
     public ResponseEntity<List<StudentDTO>> getStudents() {
         List<StudentDTO> studentDTO = studentService.findAll();
         return (studentDTO == null || studentDTO.size() == 0) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -30,7 +30,7 @@ public class StudentController {
     }
 
     // CREATE
-    @PostMapping(path = "/student", consumes = {"application/json"})
+    @PostMapping(consumes = {"application/json"})
     public ResponseEntity<StudentDTO> addStudent(@RequestBody StudentDTO student) {
         StudentDTO studentDTO = studentService.save(student);
         return (studentDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -38,28 +38,28 @@ public class StudentController {
     }
 
     // READ
-    @GetMapping("student/{studentID}")
+    @GetMapping("{studentID}")
     public ResponseEntity<StudentDTO> getStudent(@PathVariable Integer studentID) {
         StudentDTO studentDTO = studentService.findById(studentID);
         return (studentDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(studentDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/student/{studentID}/assignment/{assignmentID}/Grade")
+    @GetMapping("{studentID}/assignment/{assignmentID}/Grade")
     public ResponseEntity<GradeDTO> getStudentAssignmentGrade(@PathVariable Integer studentID, @PathVariable Integer assignmentID) {
         GradeDTO gradeDTO = studentService.getStudentAssignmentGrade(studentID, assignmentID);
         return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/student/{studentID}/assignment/{assignmentID}/Grade/Letter")
+    @GetMapping("{studentID}/assignment/{assignmentID}/Grade/Letter")
     public ResponseEntity<Character> getStudentAssignmentLetterGrade(@PathVariable Integer studentID, @PathVariable Integer assignmentID) {
         Character letterGrade = studentService.getStudentAssignmentLetterGrade(studentID, assignmentID);
         return (letterGrade == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(letterGrade, HttpStatus.OK);
     }
 
-    @GetMapping("/student/{studentID}/assignment/all/")
+    @GetMapping("{studentID}/assignment/all/")
     public ResponseEntity<List<AssignmentDTO>> findAssignmentsByStudentID(@PathVariable Integer studentID) {
         List<AssignmentDTO> assignmentDTO = assignmentService.findAssignmentsByStudentID(studentID);
         return (assignmentDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -67,7 +67,7 @@ public class StudentController {
     }
 
 
-    @GetMapping("/student/{studentID}/assignment/all/Grade/Missing")
+    @GetMapping("{studentID}/assignment/all/Grade/Missing")
     public ResponseEntity<List<AssignmentDTO>> getStudentAssignmentMissingGrade(@PathVariable Integer studentID) {
         List<AssignmentDTO> assignmentDTO = studentService.getStudentAssignmentsMissingGrade(studentID);
         return (assignmentDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -75,7 +75,7 @@ public class StudentController {
     }
 
     // UPDATE
-    @PutMapping(path = "/student/{{studentID}}", consumes = {"application/json"})
+    @PutMapping(path = "{{studentID}}", consumes = {"application/json"})
     public ResponseEntity<StudentDTO> updateStudent(@RequestBody StudentDTO dto, @PathVariable Integer studentID) {
         StudentDTO studentDTO = studentService.update(studentID, dto);
         return (studentDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -83,7 +83,7 @@ public class StudentController {
     }
 
     // DELETE
-    @DeleteMapping("student/{studentID}")
+    @DeleteMapping("{studentID}")
     public ResponseEntity<StudentDTO> deleteStudent(@PathVariable Integer studentID) {
         StudentDTO deleted = studentService.getOne(studentID);
         if (deleted == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);

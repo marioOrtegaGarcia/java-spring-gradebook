@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/assignment/")
 public class AssignmentController {
 
     @Autowired
     private AssignmentService service;
 
-    @GetMapping("assignment/all")
+    @GetMapping("all")
     public ResponseEntity<List<AssignmentDTO>> getAssignments() {
         List<AssignmentDTO> assignments = service.findAll();
         return (assignments == null || assignments.size() == 0) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -24,7 +24,7 @@ public class AssignmentController {
     }
 
     // CREATE
-    @PostMapping("assignment")
+    @PostMapping
     public ResponseEntity<AssignmentDTO> addAssignment(@RequestBody AssignmentDTO assignment) {
         AssignmentDTO assignmentDTO = service.save(assignment);
         return (assignmentDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -32,7 +32,7 @@ public class AssignmentController {
     }
 
     // READ
-    @GetMapping("assignment/{assignmentID}")
+    @GetMapping("{assignmentID}")
     public ResponseEntity<AssignmentDTO> getAssignment(@PathVariable Integer assignmentID) {
         AssignmentDTO findByIdOrElse = service.findById(assignmentID);
         return (findByIdOrElse == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -40,7 +40,7 @@ public class AssignmentController {
     }
 
     // UPDATE
-    @PutMapping(path = "/assignment/{{assignmentID}}", consumes = {"application/json"})
+    @PutMapping(path = "{{assignmentID}}", consumes = {"application/json"})
     public ResponseEntity<AssignmentDTO> updateAssignment(@RequestBody AssignmentDTO assignmentDTO, @PathVariable Integer assignmentID) {
         assignmentDTO = service.update(assignmentID, assignmentDTO);
         return (assignmentDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -48,7 +48,7 @@ public class AssignmentController {
     }
 
     // DELETE
-    @DeleteMapping("/assignment/{assignmentID}")
+    @DeleteMapping("{assignmentID}")
     public ResponseEntity<AssignmentDTO> deleteAssignment(@PathVariable Integer assignmentID) {
         AssignmentDTO deleted = service.getOne(assignmentID);
         if (deleted == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -56,21 +56,21 @@ public class AssignmentController {
         return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 
-    @GetMapping("assignment/{assignmentID}/grade/min")
+    @GetMapping("{assignmentID}/grade/min")
     public ResponseEntity<Double> getAssignmentMinimumGrade(@PathVariable Integer assignmentID) {
         Double minimumAssignmentGrade = service.getAssignmentMinimumGrade(assignmentID);
         return (minimumAssignmentGrade == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(minimumAssignmentGrade, HttpStatus.OK);
     }
 
-    @GetMapping("assignment/{assignmentID}/grade/avg")
+    @GetMapping("{assignmentID}/grade/avg")
     public ResponseEntity<Double> getAssignmentAverageGrade(@PathVariable Integer assignmentID) {
         Double minimumAssignmentGrade = service.getAssignmentAverageGrade(assignmentID);
         return (minimumAssignmentGrade == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
                 : new ResponseEntity<>(minimumAssignmentGrade, HttpStatus.OK);
     }
 
-    @GetMapping("assignment/{assignmentID}/grade/max")
+    @GetMapping("{assignmentID}/grade/max")
     public ResponseEntity<Double> getAssignmentMaximumGrade(@PathVariable Integer assignmentID) {
         Double minimumAssignmentGrade = service.getAssignmentMaximumGrade(assignmentID);
         return (minimumAssignmentGrade == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)

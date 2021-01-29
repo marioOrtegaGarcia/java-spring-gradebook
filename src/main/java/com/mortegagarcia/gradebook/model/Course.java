@@ -2,16 +2,18 @@ package com.mortegagarcia.gradebook.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "course")
+@Accessors(chain = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(value = {"professor", "students"})
+@JsonIgnoreProperties(value = {"professor", "students", "assignments"})
 public class Course {
 
     @Id

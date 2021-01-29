@@ -2,7 +2,9 @@ package com.mortegagarcia.gradebook.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+@Accessors(chain = true)
 @Data
 @NoArgsConstructor
 public class AssignmentDTO {

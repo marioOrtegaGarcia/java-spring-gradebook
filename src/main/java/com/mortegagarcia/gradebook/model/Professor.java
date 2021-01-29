@@ -5,16 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "professor")
+@Accessors(chain = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(value = {"courses", "age", "phoneNumber"})
+@JsonIgnoreProperties(value = {"courses"})
 public class Professor {
 
     @Id

@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "assignment")
+@Accessors(chain = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

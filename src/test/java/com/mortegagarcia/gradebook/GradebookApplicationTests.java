@@ -42,7 +42,12 @@ class GradebookApplicationTests {
         // act
         final String baseUrl = "http://localhost:" + randomServerPort + "/api/professor/";
         URI uri = new URI(baseUrl);
-        ProfessorDTO professor = new ProfessorDTO(9999, "test@email.com", "firstName", "lastName", "5555555555");
+        ProfessorDTO professor = new ProfessorDTO()
+                .setId(9999)
+                .setEmail("test@email.com")
+                .setFirstName("firstName")
+                .setLastName("lastName")
+                .setPhoneNumber("5555555555");
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-COM-PERSIST", "true");
@@ -61,7 +66,12 @@ class GradebookApplicationTests {
         // act
         final String baseUrl = "http://localhost:" + randomServerPort + "/api/professor/";
         URI uri = new URI(baseUrl);
-        ProfessorDTO professor = new ProfessorDTO(9999, "test@email.com", "firstName", "lastName", "5555555555");
+        ProfessorDTO professor = new ProfessorDTO()
+                .setId(9999)
+                .setEmail("test@email.com")
+                .setFirstName("firstName")
+                .setLastName("lastName")
+                .setPhoneNumber("5555555555");
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-COM-PERSIST", "true");

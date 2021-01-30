@@ -15,6 +15,7 @@ import java.util.Collections;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+    // Enables Springfox and Swagger Documentation Generation
 
     @Bean
     public Docket swaggerConfiguration() {

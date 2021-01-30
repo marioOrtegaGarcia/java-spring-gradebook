@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GradeRepository extends JpaRepository<Grade, Integer> {
 
-    @Query("SELECT g FROM Grade g WHERE g.assignment.id = :assignmentID")
-    List<Grade> findGradeByAssignmentID(@Param("assignmentID") Integer id);
+	@Query("SELECT g FROM Grade g WHERE g.assignment.id = :assignmentID")
+	List<Grade> findGradeByAssignmentID(@Param("assignmentID") Integer id);
 
 }

@@ -19,25 +19,25 @@ import java.util.List;
 @JsonIgnoreProperties(value = {"courses", "grades"})
 public class Student {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    private String firstName;
+	private String firstName;
 
-    private String lastName;
+	private String lastName;
 
-    private int gradeLevel;
+	private int gradeLevel;
 
-    private String email;
+	private String email;
 
-    @ToString.Exclude
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private List<Course> courses;
+	@ToString.Exclude
+	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+	private List<Course> courses;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<Grade> grades;
+	@ToString.Exclude
+	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+	private List<Grade> grades;
 
 }

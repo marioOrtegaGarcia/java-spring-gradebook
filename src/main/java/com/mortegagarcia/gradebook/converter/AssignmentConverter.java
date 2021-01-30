@@ -11,23 +11,23 @@ import java.util.stream.Collectors;
 @Component
 public class AssignmentConverter {
 
-    public AssignmentDTO entityToDTO(Assignment entity) {
-        if (entity == null) return null;
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(entity, AssignmentDTO.class);
-    }
+	public AssignmentDTO entityToDTO(Assignment entity) {
+		if (entity == null) return null;
+		ModelMapper mapper = new ModelMapper();
+		return mapper.map(entity, AssignmentDTO.class);
+	}
 
-    public List<AssignmentDTO> entityToDTO(List<Assignment> entity) {
-        return (entity == null) ? null : entity.stream().map(this::entityToDTO).collect(Collectors.toList());
-    }
+	public List<AssignmentDTO> entityToDTO(List<Assignment> entity) {
+		return (entity == null) ? null : entity.stream().map(this::entityToDTO).collect(Collectors.toList());
+	}
 
-    public Assignment dtoToEntity(AssignmentDTO dto) {
-        if (dto == null) return null;
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(dto, Assignment.class);
-    }
+	public Assignment dtoToEntity(AssignmentDTO dto) {
+		if (dto == null) return null;
+		ModelMapper mapper = new ModelMapper();
+		return mapper.map(dto, Assignment.class);
+	}
 
-    public List<Assignment> dtoToEntity(List<AssignmentDTO> dto) {
-        return (dto == null) ? null : dto.stream().map(this::dtoToEntity).collect(Collectors.toList());
-    }
+	public List<Assignment> dtoToEntity(List<AssignmentDTO> dto) {
+		return (dto == null) ? null : dto.stream().map(this::dtoToEntity).collect(Collectors.toList());
+	}
 }

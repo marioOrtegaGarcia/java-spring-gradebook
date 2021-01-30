@@ -13,46 +13,46 @@ import java.util.List;
 @RequestMapping("/api/grade")
 public class GradeController {
 
-    @Autowired
-    private GradeService service;
+	@Autowired
+	private GradeService service;
 
-    @GetMapping("all")
-    public ResponseEntity<List<GradeDTO>> getGrades() {
-        List<GradeDTO> gradesDTO = service.findAll();
-        return (gradesDTO == null || gradesDTO.size() == 0) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(gradesDTO, HttpStatus.OK);
-    }
+	@GetMapping("all")
+	public ResponseEntity<List<GradeDTO>> getGrades() {
+		List<GradeDTO> gradesDTO = service.findAll();
+		return (gradesDTO == null || gradesDTO.size() == 0) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+				: new ResponseEntity<>(gradesDTO, HttpStatus.OK);
+	}
 
-    // CREATE
-    @PostMapping(consumes = {"application/json"})
-    public ResponseEntity<GradeDTO> addGrade(@RequestBody GradeDTO grade) {
-        GradeDTO gradeDTO = service.save(grade);
-        return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
-                : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
-    }
+	// CREATE
+	@PostMapping(consumes = {"application/json"})
+	public ResponseEntity<GradeDTO> addGrade(@RequestBody GradeDTO grade) {
+		GradeDTO gradeDTO = service.save(grade);
+		return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+				: new ResponseEntity<>(gradeDTO, HttpStatus.OK);
+	}
 
-    // READ
-    @GetMapping("{gradeID}")
-    public ResponseEntity<GradeDTO> getGrade(@PathVariable Integer gradeID) {
-        GradeDTO gradeDTO = service.findById(gradeID);
-        return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
-    }
+	// READ
+	@GetMapping("{gradeID}")
+	public ResponseEntity<GradeDTO> getGrade(@PathVariable Integer gradeID) {
+		GradeDTO gradeDTO = service.findById(gradeID);
+		return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+				: new ResponseEntity<>(gradeDTO, HttpStatus.OK);
+	}
 
-    @PutMapping(path = "{{gradeID}}", consumes = {"application/json"})
-    public ResponseEntity<GradeDTO> updateGrade(@RequestBody GradeDTO dto, @PathVariable Integer gradeID) {
-        GradeDTO gradeDTO = service.update(gradeID, dto);
-        return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
-                : new ResponseEntity<>(gradeDTO, HttpStatus.OK);
-    }
+	@PutMapping(path = "{{gradeID}}", consumes = {"application/json"})
+	public ResponseEntity<GradeDTO> updateGrade(@RequestBody GradeDTO dto, @PathVariable Integer gradeID) {
+		GradeDTO gradeDTO = service.update(gradeID, dto);
+		return (gradeDTO == null) ? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+				: new ResponseEntity<>(gradeDTO, HttpStatus.OK);
+	}
 
-    // DELETE
-    @DeleteMapping("{gradeID}")
-    public ResponseEntity<GradeDTO> deleteGrade(@PathVariable Integer gradeID) {
-        GradeDTO deleted = service.getOne(gradeID);
-        if (deleted == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        service.delete(deleted);
-        return new ResponseEntity<>(deleted, HttpStatus.OK);
-    }
+	// DELETE
+	@DeleteMapping("{gradeID}")
+	public ResponseEntity<GradeDTO> deleteGrade(@PathVariable Integer gradeID) {
+		GradeDTO deleted = service.getOne(gradeID);
+		if (deleted == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		service.delete(deleted);
+		return new ResponseEntity<>(deleted, HttpStatus.OK);
+	}
 
 }

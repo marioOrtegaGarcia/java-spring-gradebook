@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProfessorRepository extends JpaRepository<Professor, Integer> {
 
-    @Query
-    List<Professor> findProfessorByFirstName(String firstName);
+	@Query
+	List<Professor> findProfessorByFirstName(String firstName);
 
 }

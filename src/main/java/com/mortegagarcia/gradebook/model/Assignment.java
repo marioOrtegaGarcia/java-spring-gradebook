@@ -19,19 +19,19 @@ import java.util.List;
 @JsonIgnoreProperties(value = {"grades", "course"})
 public class Assignment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    private String name;
+	private String name;
 
-    private int possibleScore;
+	private int possibleScore;
 
-    @ManyToOne
-    private Course course;
+	@ManyToOne
+	private Course course;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
-    private List<Grade> grades;
+	@ToString.Exclude
+	@OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
+	private List<Grade> grades;
 
 }

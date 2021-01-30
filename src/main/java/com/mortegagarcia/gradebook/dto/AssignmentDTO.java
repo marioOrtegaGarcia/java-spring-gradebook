@@ -9,14 +9,14 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class AssignmentDTO {
 
-    private int id;
-    private String name;
-    private int possibleScore;
-    private int courseID;
+	private int id;
+	private String name;
+	private int possibleScore;
+	private int courseID;
 
-    public AssignmentDTO(String name, int possibleScore, int courseID) {
-        this.name = name;
-        this.possibleScore = possibleScore;
-        this.courseID = courseID;
-    }
+	public AssignmentDTO(String name, int possibleScore, int courseID) {
+		this.name = name;
+		this.possibleScore = possibleScore;
+		this.courseID = courseID;
+	}
 }

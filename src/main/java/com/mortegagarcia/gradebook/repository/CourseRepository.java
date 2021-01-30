@@ -13,25 +13,25 @@ import java.util.Optional;
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
-    @Query("SELECT c FROM Course c WHERE c.professor.id = :professorID")
-    Optional<List<Course>> findCoursesByProfessorID(@Param("professorID") Integer id);
+	@Query("SELECT c FROM Course c WHERE c.professor.id = :professorID")
+	Optional<List<Course>> findCoursesByProfessorID(@Param("professorID") Integer id);
 
-    @Query("SELECT c FROM Course c WHERE c.professor = NULL")
-    List<Course> findCoursesWhereProfessorIsNull();
+	@Query("SELECT c FROM Course c WHERE c.professor = NULL")
+	List<Course> findCoursesWhereProfessorIsNull();
 
-    @Query("SELECT a FROM Assignment a WHERE a.course.id = :courseID and a.id = :assignmentID")
-    Assignment findCourseAssignment(@Param("courseID") Integer courseID, @Param("assignmentID") Integer assignmentID);
+	@Query("SELECT a FROM Assignment a WHERE a.course.id = :courseID and a.id = :assignmentID")
+	Assignment findCourseAssignment(@Param("courseID") Integer courseID, @Param("assignmentID") Integer assignmentID);
 
-    @Query("SELECT a FROM Assignment a WHERE a.course.id = :courseID")
-    List<Assignment> getCourseAssignments(@Param("courseID") Integer courseID);
+	@Query("SELECT a FROM Assignment a WHERE a.course.id = :courseID")
+	List<Assignment> getCourseAssignments(@Param("courseID") Integer courseID);
 
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM Assignment a WHERE a.course.id = :courseID")
-    void deleteCourseAssignments(Integer courseID);
+	@Transactional
+	@Modifying
+	@Query("DELETE FROM Assignment a WHERE a.course.id = :courseID")
+	void deleteCourseAssignments(Integer courseID);
 
-    @Transactional
-    @Modifying
-    void deleteCourseByProfessorId(Integer courseID);
+	@Transactional
+	@Modifying
+	void deleteCourseByProfessorId(Integer courseID);
 
 }

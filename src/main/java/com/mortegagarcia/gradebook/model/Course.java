@@ -16,24 +16,24 @@ import java.util.List;
 @JsonIgnoreProperties(value = {"professor", "students", "assignments"})
 public class Course {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    @NonNull
-    private String name;
+	@NonNull
+	private String name;
 
-    @ManyToOne
-    @JoinTable(name = "course_professor", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "professor_id"))
-    private Professor professor;
+	@ManyToOne
+	@JoinTable(name = "course_professor", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "professor_id"))
+	private Professor professor;
 
-    @ToString.Exclude
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private List<Student> students;
+	@ToString.Exclude
+	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+	private List<Student> students;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<Assignment> assignments;
+	@ToString.Exclude
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+	private List<Assignment> assignments;
 
 }

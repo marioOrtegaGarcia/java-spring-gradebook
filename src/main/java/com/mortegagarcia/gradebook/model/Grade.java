@@ -16,18 +16,18 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Grade {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    private int score;
+	private int score;
 
-    @ManyToOne
-    @NonNull
-    private Student student;
+	@ManyToOne
+	@NonNull
+	private Student student;
 
-    @ManyToOne
-    @NonNull
-    private Assignment assignment;
+	@ManyToOne
+	@NonNull
+	private Assignment assignment;
 
 }

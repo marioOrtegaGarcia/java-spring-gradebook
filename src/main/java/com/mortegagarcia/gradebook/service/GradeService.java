@@ -8,55 +8,56 @@ import com.mortegagarcia.gradebook.model.Student;
 import com.mortegagarcia.gradebook.repository.AssignmentRepository;
 import com.mortegagarcia.gradebook.repository.GradeRepository;
 import com.mortegagarcia.gradebook.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class GradeService {
 
-	@Autowired
-	private GradeRepository gradeRepository;
+	private final GradeRepository gradeRepository;
+	private final StudentRepository studentRepository;
+	private final AssignmentRepository assignmentRepository;
+	private final GradeConverter gConv;
 
-	@Autowired
-	private StudentRepository studentRepository;
-
-	@Autowired
-	private AssignmentRepository assignmentRepository;
-
-	@Autowired
-	private GradeConverter gConv;
-
+	@PreAuthorize("hasRole('ADMIN')")
 	public List<GradeDTO> findAll() {
 		List<Grade> gradeEntities = gradeRepository.findAll();
 		return gConv.entityToDTO(gradeEntities);
 	}
 
+	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToGradeWithID(authentication, #gradeDTO.id))")
 	public GradeDTO save(GradeDTO gradeDTO) {
 		Grade gradeEntity = saveNewGrade(gradeDTO);
 		return gConv.entityToDTO(gradeEntity);
 	}
 
-	public GradeDTO getOne(int id) {
-		Grade gradeEntity = gradeRepository.getOne(id);
+	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToGradeWithID(authentication, #gradeID))")
+	public GradeDTO getOne(int gradeID) {
+		Grade gradeEntity = gradeRepository.getOne(gradeID);
 		return gConv.entityToDTO(gradeEntity);
 	}
 
-	public GradeDTO findById(Integer id) {
-		Grade gradeEntity = gradeRepository.findById(id)
+	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToGradeWithID(authentication, #gradeID))")
+	public GradeDTO findById(Integer gradeID) {
+		Grade gradeEntity = gradeRepository.findById(gradeID)
 				.orElseThrow(IllegalArgumentException::new);
 		return gConv.entityToDTO(gradeEntity);
 	}
 
+	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToGradeWithID(authentication, #gradeDTO.id))")
 	public void delete(GradeDTO gradeDTO) {
 		Grade gradeEntity = gradeRepository.findById(gradeDTO.getId())
 				.orElseThrow(IllegalArgumentException::new);
 		gradeRepository.delete(gradeEntity);
 	}
 
-	public GradeDTO update(Integer gradeId, GradeDTO dto) {
-		Grade gradeEntity = gradeRepository.findById(gradeId).orElse(null);
+	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToGradeWithID(authentication, #gradeID))")
+	public GradeDTO update(Integer gradeID, GradeDTO dto) {
+		Grade gradeEntity = gradeRepository.findById(gradeID).orElse(null);
 		if (gradeEntity == null) gradeEntity = saveNewGrade(dto);
 		else gradeEntity = saveExistingGrade(gradeEntity, dto);
 		return gConv.entityToDTO(gradeEntity);

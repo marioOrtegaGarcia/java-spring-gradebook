@@ -6,59 +6,64 @@ import com.mortegagarcia.gradebook.model.Assignment;
 import com.mortegagarcia.gradebook.model.Course;
 import com.mortegagarcia.gradebook.repository.AssignmentRepository;
 import com.mortegagarcia.gradebook.repository.CourseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class AssignmentService {
 
-	@Autowired
-	private AssignmentRepository assignmentRepository;
+	private final AssignmentRepository assignmentRepository;
+	private final CourseRepository courseRepository;
+	private final AssignmentConverter aConv;
 
-	@Autowired
-	private CourseRepository courseRepository;
-
-	@Autowired
-	private AssignmentConverter aConv;
-
+	@PreAuthorize("hasRole('ADMIN')")
 	public List<AssignmentDTO> findAll() {
 		List<Assignment> assignmentEntities = assignmentRepository.findAll();
 		return aConv.entityToDTO(assignmentEntities);
 	}
 
-	public AssignmentDTO getOne(int id) {
-		Assignment assignmentEntity = assignmentRepository.getOne(id);
+	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentID)")
+	public AssignmentDTO getOne(int assignmentID) {
+		Assignment assignmentEntity = assignmentRepository.getOne(assignmentID);
 		return aConv.entityToDTO(assignmentEntity);
 	}
 
+	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentDTO.id))")
 	public AssignmentDTO save(AssignmentDTO assignmentDTO) {
 		Assignment assignmentEntity = saveNewEntity(assignmentDTO);
 		return aConv.entityToDTO(assignmentEntity);
 	}
 
-	public AssignmentDTO findById(Integer id) {
-		Assignment assignmentEntity = assignmentRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentID)")
+	public AssignmentDTO findById(Integer assignmentID) {
+		Assignment assignmentEntity = assignmentRepository.findById(assignmentID).orElseThrow(IllegalArgumentException::new);
 		return aConv.entityToDTO(assignmentEntity);
 	}
 
-	public List<AssignmentDTO> findAssignmentByCourseID(Integer id) {
-		List<Assignment> assignmentEntities = assignmentRepository.findAssignmentByCourseID(id);
+	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentID)")
+	public List<AssignmentDTO> findAssignmentByCourseID(Integer assignmentID) {
+		List<Assignment> assignmentEntities = assignmentRepository.findAssignmentByCourseID(assignmentID);
 		return aConv.entityToDTO(assignmentEntities);
 	}
 
-	public List<AssignmentDTO> findAssignmentsByStudentID(Integer id) {
-		List<Assignment> assignmentEntities = assignmentRepository.findAssignmentsByStudentID(id);
+	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentID)")
+	public List<AssignmentDTO> findAssignmentsByStudentID(Integer assignmentID) {
+		List<Assignment> assignmentEntities = assignmentRepository.findAssignmentsByStudentID(assignmentID);
 		return aConv.entityToDTO(assignmentEntities);
 	}
 
+	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentDTO.id))")
 	public void delete(AssignmentDTO assignmentDTO) {
 		Assignment assignment = assignmentRepository.findById(assignmentDTO.getId())
 				.orElseThrow(IllegalArgumentException::new);
 		assignmentRepository.delete(assignment);
 	}
 
+	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentDTO.id))")
 	public AssignmentDTO update(Integer assignmentID, AssignmentDTO assignmentDTO) {
 		Assignment assignmentEntity = assignmentRepository.findById(assignmentID).orElse(null);
 		if (assignmentEntity == null) assignmentEntity = saveNewEntity(assignmentDTO);
@@ -66,14 +71,17 @@ public class AssignmentService {
 		return aConv.entityToDTO(assignmentEntity);
 	}
 
+	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentID)")
 	public Double getAssignmentMinimumGrade(Integer assignmentID) {
 		return assignmentRepository.getAssignmentMinimumGrade(assignmentID);
 	}
 
+	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentID)")
 	public Double getAssignmentAverageGrade(Integer assignmentID) {
 		return assignmentRepository.getAssignmentAverageGrade(assignmentID);
 	}
 
+	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentID)")
 	public Double getAssignmentMaximumGrade(Integer assignmentID) {
 		return assignmentRepository.getAssignmentMaximumGrade(assignmentID);
 	}

@@ -38,7 +38,7 @@ Run application and visit link
 
 - [ ] Spring Security
   - [X] Create Security checks at Service layer @PreAuthorize
-  - [ ] Store User and Authorities in Database
+  - [X] Store User and Authorities in Database
   - [ ] Create a link between Users and Student/Teacher
 - [ ] Improve Response Entity Status Codes
 - [ ] Improve thrown Exceptions

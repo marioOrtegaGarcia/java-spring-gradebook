@@ -1,8 +1,11 @@
--- CREATE DATABASE
---     IF NOT EXISTS `school_gradebook`;
--- USE `school_gradebook`;
+-- CREATE
+-- DATABASE
+-- 	IF NOT EXISTS `school_gradebook`;
+-- USE
+-- `school_gradebook`;
 --
--- SET FOREIGN_KEY_CHECKS = 0;
+-- SET
+-- FOREIGN_KEY_CHECKS = 0;
 --
 -- DROP TABLE IF EXISTS `professor`;
 -- CREATE TABLE `professor`
@@ -111,8 +114,65 @@
 --   AUTO_INCREMENT = 1
 --   DEFAULT CHARSET = LATIN1;
 --
--- SET FOREIGN_KEY_CHECKS = 1;
+-- -- SPRING SECURITY TABLES
 --
+-- DROP TABLE IF EXISTS `user`;
+-- CREATE TABLE `user`
+-- (
+--     `id`       INT(11)     NOT NULL auto_increment,
+--     `username` varchar(50) NOT NULL UNIQUE,
+--     # 	`email`    varchar(50) NOT NULL UNIQUE,
+--     `password` varchar(68) NOT NULL,
+--     `enabled`  tinyint(1)  NOT NULL,
+--     PRIMARY KEY (`id`)
+-- ) ENGINE = INNODB
+--   AUTO_INCREMENT = 1
+--   DEFAULT CHARSET = LATIN1;
+--
+-- DROP TABLE IF EXISTS `role`;
+-- CREATE TABLE `role`
+-- (
+--     `id`   INT(11)     NOT NULL auto_increment,
+--     `role` varchar(50) NOT NULL UNIQUE,
+--     PRIMARY KEY (`id`)
+-- ) ENGINE = INNODB
+--   AUTO_INCREMENT = 1
+--   DEFAULT CHARSET = LATIN1;
+--
+-- DROP TABLE IF EXISTS `user_role`;
+-- CREATE TABLE `user_role`
+-- (
+--     `user_id` INT(11) NOT NULL,
+--     `role_id` INT(11) NOT NULL,
+--     PRIMARY KEY (`user_id`, `role_id`),
+--     KEY `FK_USER` (`user_id`),
+--     CONSTRAINT `FK_USER` FOREIGN KEY (`user_id`)
+--         REFERENCES `user` (`id`)
+--         ON DELETE NO ACTION ON UPDATE NO ACTION,
+--     CONSTRAINT `FK_ROLE` FOREIGN KEY (`role_id`)
+--         REFERENCES `role` (`id`)
+--         ON DELETE NO ACTION ON UPDATE NO ACTION
+-- ) ENGINE = INNODB
+--   DEFAULT CHARSET = LATIN1;
+--
+-- SET
+-- FOREIGN_KEY_CHECKS = 1;
+--
+-- INSERT INTO `user`
+-- VALUES (1, 'admin_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
+--        (2, 'professor_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
+--        (3, 'student_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1);
+--
+-- INSERT INTO `role`
+-- VALUES (1, 'ADMIN'),
+--        (2, 'PROFESSOR'),
+--        (3, 'STUDENT');
+--
+-- INSERT INTO `user_role`
+-- VALUES (1, 1),
+--        (1, 2),
+--        (2, 2),
+--        (3, 3);
 --
 -- INSERT INTO PROFESSOR
 -- VALUES (1, 22, 'mario@gmail.com', 'Mario', 'Mario', '5105555555'),

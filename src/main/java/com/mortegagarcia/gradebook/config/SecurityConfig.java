@@ -1,41 +1,49 @@
 package com.mortegagarcia.gradebook.config;
 
+import com.mortegagarcia.gradebook.service.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	@Autowired
+	UserDetailsServiceImpl userDetailsService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-		User.UserBuilder userBuilder = User.builder();
-
-		// Encrypted password = "1234
-		auth.inMemoryAuthentication()
-				.withUser(userBuilder.username("student").password("{bcrypt}$2y$12$fa8O2Z8ckCWHtoAoXvIjTeQCGAAXJ0rS49LSiHC3ZSp5CZB0Lrn6i").roles("STUDENT"))
-				.withUser(userBuilder.username("professor").password("{bcrypt}$2y$12$fa8O2Z8ckCWHtoAoXvIjTeQCGAAXJ0rS49LSiHC3ZSp5CZB0Lrn6i").roles("PROFESSOR"))
-				.withUser(userBuilder.username("admin").password("{bcrypt}$2y$12$fa8O2Z8ckCWHtoAoXvIjTeQCGAAXJ0rS49LSiHC3ZSp5CZB0Lrn6i").roles("ADMIN"));
+		auth
+				.userDetailsService(userDetailsService)
+				.passwordEncoder(passwordEncoder);
 	}
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-
-		http
-				.authorizeRequests()
+		http.authorizeRequests()
 				.antMatchers("/api/**").authenticated()
-				// Swagger
 //				.antMatchers("/swagger-resources/*", "*.html", "/api/v1/swagger.json").hasRole("ADMIN")
 				.and()
 				.httpBasic()
 				.and()
 				.csrf().disable()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	}
+
+	@Bean
+	public PasswordEncoder createDelegatingPasswordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 }

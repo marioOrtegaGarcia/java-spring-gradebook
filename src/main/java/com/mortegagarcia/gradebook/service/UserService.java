@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.HashSet;
 
-import static java.util.Arrays.asList;
-
 @Service
 public class UserService {
 

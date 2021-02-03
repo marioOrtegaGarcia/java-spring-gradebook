@@ -158,6 +158,7 @@
 -- SET
 -- FOREIGN_KEY_CHECKS = 1;
 --
+
 -- INSERT INTO `user`
 -- VALUES (1, 'admin_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
 --        (2, 'professor_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),

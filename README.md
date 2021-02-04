@@ -33,13 +33,22 @@ Run application and visit link
 - Logging
   - Implements basic logging for application flow
     - Before and AfterReturning Method calls
+  
+### Spring Security
+- Work in Progress
 
 ## TODO
 
 - [ ] Spring Security
   - [X] Create Security checks at Service layer @PreAuthorize
   - [X] Store User and Authorities in Database
+  - [X] Create Person Class that Student, Professor & Admin can extend from
+      - [ ] Should User extend Person?
   - [ ] Create a link between Users and Student/Teacher
+    - [ ] Spring Security ACL (Access Control List) seems to be the option.
+      - ACL specifies which identities are granted which operations on a given object
+      - Spring Security Access Control List is a Spring component which supports Domain Object Security. Simply put, Spring ACL helps in defining permissions for specific user/role on a single domain object
+        - instead of across the board, at the typical per-operation level.
 - [ ] Improve Response Entity Status Codes
 - [ ] Improve thrown Exceptions
   - [ ] Ensure proper Exceptions are thrown

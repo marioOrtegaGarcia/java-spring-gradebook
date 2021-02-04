@@ -1,11 +1,12 @@
 package com.mortegagarcia.gradebook.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,23 +15,14 @@ import java.util.List;
 @Table(name = "professor")
 @Accessors(chain = true)
 @Data
+@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
-@JsonIgnoreProperties(value = {"courses"})
-public class Professor {
+@EqualsAndHashCode(callSuper = true)
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+@JsonIgnoreProperties(value = {"courses"})
+public class Professor extends Person {
 
 	private int age;
-
-	@OneToOne
-	private Email email;
-
-	private String firstName;
-
-	private String lastName;
 
 	private String phoneNumber;
 

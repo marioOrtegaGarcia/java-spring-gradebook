@@ -1,32 +1,24 @@
 package com.mortegagarcia.gradebook.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "admin")
 @Accessors(chain = true)
 @Data
+@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
-public class Admin {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+@EqualsAndHashCode(callSuper = true)
+public class Admin extends Person {
 
 	private int age;
-
-	@OneToOne
-	private Email email;
-
-	private String firstName;
-
-	private String lastName;
 
 	private String phoneNumber;
 

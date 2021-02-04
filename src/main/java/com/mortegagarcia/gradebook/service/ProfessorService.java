@@ -2,8 +2,10 @@ package com.mortegagarcia.gradebook.service;
 
 import com.mortegagarcia.gradebook.converter.ProfessorConverter;
 import com.mortegagarcia.gradebook.dto.ProfessorDTO;
+import com.mortegagarcia.gradebook.model.Email;
 import com.mortegagarcia.gradebook.model.Professor;
 import com.mortegagarcia.gradebook.repository.CourseRepository;
+import com.mortegagarcia.gradebook.repository.EmailRepository;
 import com.mortegagarcia.gradebook.repository.ProfessorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +19,7 @@ public class ProfessorService {
 
 	private final ProfessorRepository professorRepository;
 	private final CourseRepository courseRepository;
+	private final EmailRepository emailRepository;
 	private final ProfessorConverter conv;
 
 	@PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
@@ -67,7 +70,9 @@ public class ProfessorService {
 	private Professor saveExistingEntity(Professor professorEntity, ProfessorDTO professorDTO) {
 		professorEntity.setFirstName(professorDTO.getFirstName());
 		professorEntity.setLastName(professorDTO.getLastName());
-		professorEntity.setEmail(professorDTO.getEmail());
+		Email email = emailRepository.findEmailByEmail(professorDTO.getEmail())
+				.orElse(new Email().setEmail(professorDTO.getEmail()));
+		professorEntity.setEmail(email);
 		professorEntity.setPhoneNumber(professorDTO.getPhoneNumber());
 		professorEntity = professorRepository.save(professorEntity);
 		return professorEntity;

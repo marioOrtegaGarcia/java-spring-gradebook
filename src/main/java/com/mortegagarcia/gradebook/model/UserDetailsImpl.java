@@ -1,6 +1,7 @@
-package com.mortegagarcia.gradebook.config;
+package com.mortegagarcia.gradebook.model;
 
-import com.mortegagarcia.gradebook.model.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,22 +11,30 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
 	private String userName;
+	private String email;
 	private String password;
 	private Boolean enabled;
 	private List<GrantedAuthority> authorities;
 
 	public UserDetailsImpl(User user) {
 		this.userName = user.getUsername();
+		this.email = user.getEmail().getEmail();
 		this.password = user.getPassword();
 		this.enabled = user.isEnabled();
 		this.authorities = user.getRoles().stream()
 				.map(String::valueOf)
 				.map(SimpleGrantedAuthority::new)
 				.collect(Collectors.toList());
+	}
+
+	public String getEmail() {
+		return email;
 	}
 
 	@Override

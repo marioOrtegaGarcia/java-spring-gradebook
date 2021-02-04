@@ -159,76 +159,94 @@
 -- FOREIGN_KEY_CHECKS = 1;
 --
 
--- INSERT INTO `user`
--- VALUES (1, 'admin_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
---        (2, 'professor_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
---        (3, 'student_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1);
---
--- INSERT INTO `role`
--- VALUES (1, 'ADMIN'),
---        (2, 'PROFESSOR'),
---        (3, 'STUDENT');
---
--- INSERT INTO `user_role`
--- VALUES (1, 1),
---        (1, 2),
---        (2, 2),
---        (3, 3);
---
--- INSERT INTO PROFESSOR
--- VALUES (1, 22, 'mario@gmail.com', 'Mario', 'Mario', '5105555555'),
---        (2, 23, 'luigi@gmail.com', 'Luigi', 'Mario', '5105551234'),
---        (3, 24, 'toad@gmail.com', 'Toad', 'Mushroom', '5105554321');
---
--- INSERT INTO COURSE
--- VALUES (1, 'Linear Algebra'),
---        (2, 'Machine Learning'),
---        (3, 'Computer Vision');
---
--- INSERT INTO COURSE_PROFESSOR
--- VALUES (1, 1),
---        (2, 1),
---        (3, 3);
---
--- INSERT INTO STUDENT
--- VALUES (1, 12, 'Bowser', 'Turtle', 'bowser@gmail.com'),
---        (2, 12, 'Turtle', 'Turtle', 'turtle@gmail.com'),
---        (3, 12, 'Yoshi', 'Dinosaur', 'yoshi@gmail.com'),
---        (4, 12, 'Wario', 'Wario', 'wario@gmail.com'),
---        (5, 12, 'Waluigi', 'Wario', 'waluigi@gmail.com'),
---        (6, 12, 'Rosalina', 'Person', 'rosalia@gmail.com'),
---        (7, 12, 'Peach', 'Princess', 'peach@gmail.com'),
---        (8, 12, 'Daisy', 'Princess', 'daidy@gmail.com'),
---        (9, 12, 'Kamek', 'Witch', 'kamek@gmail.com'),
---        (10, 12, 'Birdo', 'Dinosaur', 'birdo@gmail.com'),
---        (11, 12, 'Chain Chomp', 'Creature', 'chainchomp@gmail.com');
---
--- INSERT INTO COURSE_STUDENT
--- VALUES (1, 1),
---        (1, 3),
---        (1, 6),
---        (1, 7),
---        (1, 10),
---        (2, 1),
---        (2, 2),
---        (2, 4),
---        (2, 5),
---        (2, 9),
---        (3, 2),
---        (3, 3),
---        (3, 5),
---        (3, 6),
---        (3, 10);
---
--- INSERT INTO ASSIGNMENT
--- VALUES (1, 'Kernel Filter', 10, 3),
---        (4, 'Pyramid Image Processing', 10, 3),
---        (2, 'Properties of a Linear Function', 10, 1),
---        (3, 'Dimensionality Reduction', 10, 2);
---
--- INSERT INTO GRADE
--- VALUES (1, 8, 1, 2),
---        (2, 4, 1, 3),
---        (3, 7, 1, 5),
---        (4, 8, 1, 6),
---        (5, 10, 1, 10);
+INSERT INTO PROFESSOR (id, age, email_id, first_name, last_name, phone_number)
+VALUES (1, 22, 1, 'Mario', 'Mario', '5105555555'),
+       (2, 23, 2, 'Luigi', 'Mario', '5105551234'),
+       (3, 24, 3, 'Toad', 'Mushroom', '5105554321');
+
+INSERT INTO COURSE (id, name)
+VALUES (1, 'Linear Algebra'),
+       (2, 'Machine Learning'),
+       (3, 'Computer Vision');
+
+INSERT INTO COURSE_PROFESSOR (course_id, professor_id)
+VALUES (1, 1),
+       (2, 1),
+       (3, 3);
+
+INSERT INTO EMAIL (id, email)
+VALUES (1, 'mario@gmail.com'),
+       (2, 'luigi@gmail.com'),
+       (3, 'toad@gmail.com'),
+       (4, 'bowser@gmail.com'),
+       (5, 'turtle@gmail.com'),
+       (6, 'yoshi@gmail.com'),
+       (7, 'wario@gmail.com'),
+       (8, 'waluigi@gmail.com'),
+       (9, 'rosalina@gmail.com'),
+       (10, 'peach@gmail.com'),
+       (11, 'daisy@gmail.com'),
+       (12, 'kamek@gmail.com'),
+       (13, 'birdo@gmail.com'),
+       (14, 'chainchomp@gmail.com');
+
+
+
+INSERT INTO STUDENT (id, grade_level, first_name, last_name, email_id)
+VALUES (1, 12, 'Bowser', 'Turtle', 4),
+       (2, 12, 'Turtle', 'Turtle', 5),
+       (3, 12, 'Yoshi', 'Dinosaur', 6),
+       (4, 12, 'Wario', 'Wario', 7),
+       (5, 12, 'Waluigi', 'Wario', 8),
+       (6, 12, 'Rosalina', 'Person', 9),
+       (7, 12, 'Peach', 'Princess', 10),
+       (8, 12, 'Daisy', 'Princess', 11),
+       (9, 12, 'Kamek', 'Witch', 12),
+       (10, 12, 'Birdo', 'Dinosaur', 13),
+       (11, 12, 'Chain Chomp', 'Creature', 14);
+
+INSERT INTO COURSE_STUDENT (course_id, student_id)
+VALUES (1, 1),
+       (1, 3),
+       (1, 6),
+       (1, 7),
+       (1, 10),
+       (2, 1),
+       (2, 2),
+       (2, 4),
+       (2, 5),
+       (2, 9),
+       (3, 2),
+       (3, 3),
+       (3, 5),
+       (3, 6),
+       (3, 10);
+
+INSERT INTO ASSIGNMENT (id, name, possible_score, course_id)
+VALUES (1, 'Kernel Filter', 10, 3),
+       (4, 'Pyramid Image Processing', 10, 3),
+       (2, 'Properties of a Linear Function', 10, 1),
+       (3, 'Dimensionality Reduction', 10, 2);
+
+INSERT INTO GRADE (id, score, assignment_id, student_id)
+VALUES (1, 8, 1, 2),
+       (2, 4, 1, 3),
+       (3, 7, 1, 5),
+       (4, 8, 1, 6),
+       (5, 10, 1, 10);
+
+INSERT INTO `user` (id, username, email_id, password, enabled)
+VALUES (1, 'admin_user', null, '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
+       (2, 'professor_user', 1, '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
+       (3, 'student_user', 4, '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1);
+
+INSERT INTO `role` (id, role)
+VALUES (1, 'ADMIN'),
+       (2, 'PROFESSOR'),
+       (3, 'STUDENT');
+
+INSERT INTO `user_role` (user_id, role_id)
+VALUES (1, 1),
+       (1, 2),
+       (2, 2),
+       (3, 3);

@@ -25,7 +25,8 @@ public class Professor {
 
 	private int age;
 
-	private String email;
+	@OneToOne
+	private Email email;
 
 	private String firstName;
 

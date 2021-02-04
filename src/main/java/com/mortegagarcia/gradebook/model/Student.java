@@ -29,7 +29,8 @@ public class Student {
 
 	private int gradeLevel;
 
-	private String email;
+	@OneToOne
+	private Email email;
 
 	@ToString.Exclude
 	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

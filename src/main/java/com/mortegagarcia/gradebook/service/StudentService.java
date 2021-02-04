@@ -7,8 +7,10 @@ import com.mortegagarcia.gradebook.dto.AssignmentDTO;
 import com.mortegagarcia.gradebook.dto.GradeDTO;
 import com.mortegagarcia.gradebook.dto.StudentDTO;
 import com.mortegagarcia.gradebook.model.Assignment;
+import com.mortegagarcia.gradebook.model.Email;
 import com.mortegagarcia.gradebook.model.Grade;
 import com.mortegagarcia.gradebook.model.Student;
+import com.mortegagarcia.gradebook.repository.EmailRepository;
 import com.mortegagarcia.gradebook.repository.StudentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,7 @@ import java.util.List;
 public class StudentService {
 
 	private final StudentRepository studentRepository;
+	private final EmailRepository emailRepository;
 	private final StudentConverter sConv;
 	private final AssignmentConverter aConv;
 	private final GradeConverter gConv;
@@ -87,7 +90,9 @@ public class StudentService {
 		studentEntity.setFirstName(studentDTO.getFirstName());
 		studentEntity.setLastName(studentDTO.getLastName());
 		studentEntity.setGradeLevel(studentDTO.getGradeLevel());
-		studentEntity.setEmail(studentDTO.getEmail());
+		Email email = emailRepository.findEmailByEmail(studentDTO.getEmail())
+				.orElse(new Email().setEmail(studentDTO.getEmail()));
+		studentEntity.setEmail(email);
 		studentEntity = studentRepository.save(studentEntity);
 		return studentEntity;
 	}

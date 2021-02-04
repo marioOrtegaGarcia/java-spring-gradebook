@@ -1,5 +1,6 @@
 package com.mortegagarcia.gradebook.service;
 
+import com.mortegagarcia.gradebook.exceptions.EmailNotFoundException;
 import com.mortegagarcia.gradebook.model.Role;
 import com.mortegagarcia.gradebook.model.User;
 import com.mortegagarcia.gradebook.repository.RoleRepository;
@@ -22,9 +23,10 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-//	public User findUserByEmail(String email) {
-//		return userRepository.findByEmail(email);
-//	}
+	public User findUserByEmail(String email) throws EmailNotFoundException {
+		return userRepository.findByEmail(email)
+				.orElseThrow(() -> new EmailNotFoundException("User with Email " + email + " not found."));
+	}
 
 	public User findUserByUserName(String userName) throws UsernameNotFoundException {
 		return userRepository.findByUsername(userName)

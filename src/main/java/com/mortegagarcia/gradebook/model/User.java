@@ -10,8 +10,8 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
 	@Id
@@ -20,7 +20,8 @@ public class User {
 
 	private String username;
 
-//	private String email;
+	@OneToOne
+	private Email email;
 
 	private String password;
 

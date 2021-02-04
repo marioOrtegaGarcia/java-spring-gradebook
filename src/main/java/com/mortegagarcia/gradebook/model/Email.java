@@ -1,20 +1,23 @@
 package com.mortegagarcia.gradebook.model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "role")
+@Table(name = "email")
+@Accessors(chain = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role {
+public class Email {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	private String role;
+	private String email;
 }

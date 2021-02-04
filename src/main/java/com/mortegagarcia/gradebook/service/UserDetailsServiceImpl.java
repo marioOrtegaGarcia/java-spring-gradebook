@@ -2,6 +2,7 @@ package com.mortegagarcia.gradebook.service;
 
 import com.mortegagarcia.gradebook.model.Role;
 import com.mortegagarcia.gradebook.model.User;
+import com.mortegagarcia.gradebook.model.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,8 +25,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userService.findUserByUserName(username);
-		List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
-		return buildUserForAuthentication(user, authorities);
+		return new UserDetailsImpl(user);
+//		List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
+//		return buildUserForAuthentication(user, authorities);
 	}
 
 	private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {

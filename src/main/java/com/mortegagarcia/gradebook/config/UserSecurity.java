@@ -1,7 +1,10 @@
 package com.mortegagarcia.gradebook.config;
 
+import lombok.extern.java.Log;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+
+import java.security.Principal;
 
 @Component("userSecurity")
 public class UserSecurity {

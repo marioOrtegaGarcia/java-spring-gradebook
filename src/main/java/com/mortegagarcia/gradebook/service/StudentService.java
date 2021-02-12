@@ -13,7 +13,6 @@ import com.mortegagarcia.gradebook.model.Student;
 import com.mortegagarcia.gradebook.repository.EmailRepository;
 import com.mortegagarcia.gradebook.repository.StudentRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,39 +27,33 @@ public class StudentService {
 	private final AssignmentConverter aConv;
 	private final GradeConverter gConv;
 
-	@PreAuthorize("hasRole('ADMIN')")
 	public List<StudentDTO> findAll() {
 		List<Student> studentEntities = studentRepository.findAll();
 		return sConv.entityToDTO(studentEntities);
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
 	public StudentDTO save(StudentDTO studentDTO) {
 		Student studentEntity = saveNewEntity(studentDTO);
 		return sConv.entityToDTO(studentEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasAnyRole('PROFESSOR', 'STUDENT') and @userSecurity.hasAccessToStudentWithID(authentication, #studentID))")
 	public StudentDTO getOne(int studentID) {
 		Student studentEntity = studentRepository.getOne(studentID);
 		return sConv.entityToDTO(studentEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasAnyRole('PROFESSOR', 'STUDENT') and @userSecurity.hasAccessToStudentWithID(authentication, #studentID))")
 	public StudentDTO findById(Integer studentID) {
 		Student studentEntity = studentRepository.findById(studentID)
 				.orElseThrow(IllegalArgumentException::new);
 		return sConv.entityToDTO(studentEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
 	public void delete(StudentDTO studentDTO) {
 		Student studentEntity = studentRepository.findById(studentDTO.getId())
 				.orElseThrow(IllegalArgumentException::new);
 		studentRepository.delete(studentEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
 	public StudentDTO update(Integer studentID, StudentDTO studentDTO) {
 		Student studentEntity = studentRepository.findById(studentID).orElse(null);
 		if (studentEntity == null) studentEntity = saveNewEntity(studentDTO);
@@ -68,18 +61,15 @@ public class StudentService {
 		return sConv.entityToDTO(studentEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasAnyRole('PROFESSOR', 'STUDENT') and @userSecurity.hasAccessToStudentWithID(authentication, #studentID))")
 	public GradeDTO getStudentAssignmentGrade(Integer studentID, Integer assignmentID) {
 		Grade gradeDTO = studentRepository.getStudentAssignmentGrade(studentID, assignmentID);
 		return gConv.entityToDTO(gradeDTO);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasAnyRole('PROFESSOR', 'STUDENT') and @userSecurity.hasAccessToStudentWithID(authentication, #studentID))")
 	public Character getStudentAssignmentLetterGrade(Integer studentID, Integer assignmentID) {
 		return studentRepository.getStudentAssignmentLetterGrade(studentID, assignmentID);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasAnyRole('PROFESSOR', 'STUDENT') and @userSecurity.hasAccessToStudentWithID(authentication, #studentID))")
 	public List<AssignmentDTO> getStudentAssignmentsMissingGrade(Integer studentID) {
 		List<Assignment> assignment = studentRepository.findAllByIdAndMissingAssignments(studentID)
 				.orElseThrow(IllegalArgumentException::new);

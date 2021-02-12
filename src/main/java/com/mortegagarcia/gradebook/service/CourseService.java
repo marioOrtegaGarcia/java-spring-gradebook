@@ -8,7 +8,6 @@ import com.mortegagarcia.gradebook.model.Assignment;
 import com.mortegagarcia.gradebook.model.Course;
 import com.mortegagarcia.gradebook.repository.CourseRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,52 +20,44 @@ public class CourseService {
 	private final CourseConverter cConv;
 	private final AssignmentConverter aConv;
 
-	@PreAuthorize("hasRole('ADMIN')")
 	public List<CourseDTO> findAll() {
 		List<Course> courseEntities = courseRepository.findAll();
 		return cConv.entityToDTO(courseEntities);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToCourseWithID(authentication, #courseDTO.id))")
 	public CourseDTO save(CourseDTO courseDTO) {
 		Course courseEntity = saveNewEntity(courseDTO);
 		return cConv.entityToDTO(courseEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToCourseWithID(authentication, #courseID)")
 	public CourseDTO getOne(int courseID) {
 		Course courseEntity = courseRepository.getOne(courseID);
 		return cConv.entityToDTO(courseEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToCourseWithID(authentication, #courseID)")
 	public CourseDTO findById(Integer courseID) {
 		Course courseEntity = courseRepository.findById(courseID)
 				.orElseThrow(IllegalArgumentException::new);
 		return cConv.entityToDTO(courseEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToCourseWithID(authentication, #courseID)")
 	public List<CourseDTO> findCoursesByProfessorID(Integer courseID) {
 		List<Course> courseEntities = courseRepository.findCoursesByProfessorID(courseID)
 				.orElseThrow(IllegalArgumentException::new);
 		return cConv.entityToDTO(courseEntities);
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
 	public List<CourseDTO> findCoursesWhereProfessorIsNull() {
 		List<Course> courseEntities = courseRepository.findCoursesWhereProfessorIsNull();
 		return cConv.entityToDTO(courseEntities);
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
 	public void delete(CourseDTO courseDTO) {
 		Course courseEntity = courseRepository.findById(courseDTO.getId())
 				.orElseThrow(IllegalArgumentException::new);
 		courseRepository.delete(courseEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToCourseWithID(authentication, #courseID))")
 	public CourseDTO update(Integer courseID, CourseDTO courseDTO) {
 		Course courseEntity = courseRepository.findById(courseID).orElse(null);
 		if (courseEntity == null) courseEntity = saveNewEntity(courseDTO);
@@ -74,19 +65,16 @@ public class CourseService {
 		return cConv.entityToDTO(courseEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or @userSecurity.hasAccessToAssignmentWithID(authentication, #assignmentID)")
 	public AssignmentDTO findCourseAssignment(Integer courseID, Integer assignmentID) {
 		Assignment assignment = courseRepository.findCourseAssignment(courseID, assignmentID);
 		return aConv.entityToDTO(assignment);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToCourseWithID(authentication, #courseID))")
 	public List<AssignmentDTO> getCourseAssignments(Integer courseID) {
 		List<Assignment> assignments = courseRepository.getCourseAssignments(courseID);
 		return aConv.entityToDTO(assignments);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToCourseWithID(authentication, #courseID))")
 	public List<AssignmentDTO> deleteCourseAssignments(Integer courseID) {
 		List<AssignmentDTO> assignmentDTOS = aConv.entityToDTO(courseRepository.getCourseAssignments(courseID));
 		courseRepository.deleteCourseAssignments(courseID);

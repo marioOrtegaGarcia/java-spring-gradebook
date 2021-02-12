@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class EmailService {
 
-	private  final EmailRepository emailRepository;
+	private final EmailRepository emailRepository;
 
 	public Email findEmailByEmail(String email) {
 		return emailRepository.findEmailByEmail(email).orElseThrow(Error::new);

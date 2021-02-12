@@ -9,7 +9,6 @@ import com.mortegagarcia.gradebook.repository.AssignmentRepository;
 import com.mortegagarcia.gradebook.repository.GradeRepository;
 import com.mortegagarcia.gradebook.repository.StudentRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,39 +22,33 @@ public class GradeService {
 	private final AssignmentRepository assignmentRepository;
 	private final GradeConverter gConv;
 
-	@PreAuthorize("hasRole('ADMIN')")
 	public List<GradeDTO> findAll() {
 		List<Grade> gradeEntities = gradeRepository.findAll();
 		return gConv.entityToDTO(gradeEntities);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToGradeWithID(authentication, #gradeDTO.id))")
 	public GradeDTO save(GradeDTO gradeDTO) {
 		Grade gradeEntity = saveNewGrade(gradeDTO);
 		return gConv.entityToDTO(gradeEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToGradeWithID(authentication, #gradeID))")
 	public GradeDTO getOne(int gradeID) {
 		Grade gradeEntity = gradeRepository.getOne(gradeID);
 		return gConv.entityToDTO(gradeEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToGradeWithID(authentication, #gradeID))")
 	public GradeDTO findById(Integer gradeID) {
 		Grade gradeEntity = gradeRepository.findById(gradeID)
 				.orElseThrow(IllegalArgumentException::new);
 		return gConv.entityToDTO(gradeEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToGradeWithID(authentication, #gradeDTO.id))")
 	public void delete(GradeDTO gradeDTO) {
 		Grade gradeEntity = gradeRepository.findById(gradeDTO.getId())
 				.orElseThrow(IllegalArgumentException::new);
 		gradeRepository.delete(gradeEntity);
 	}
 
-	@PreAuthorize("hasRole('ADMIN') or (hasRole('PROFESSOR') and @userSecurity.hasAccessToGradeWithID(authentication, #gradeID))")
 	public GradeDTO update(Integer gradeID, GradeDTO dto) {
 		Grade gradeEntity = gradeRepository.findById(gradeID).orElse(null);
 		if (gradeEntity == null) gradeEntity = saveNewGrade(dto);

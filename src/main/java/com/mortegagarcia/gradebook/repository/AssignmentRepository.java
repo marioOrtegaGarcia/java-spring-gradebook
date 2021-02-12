@@ -9,6 +9,10 @@ import java.util.List;
 
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
 
+	List<Assignment> findAll();
+
+	Assignment getOne(Integer id);
+
 	@Query("SELECT a " +
 			"FROM Assignment a " +
 			"WHERE a.course.id = :courseID")

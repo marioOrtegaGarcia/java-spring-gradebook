@@ -1,164 +1,3 @@
--- CREATE
--- DATABASE
--- 	IF NOT EXISTS `school_gradebook`;
--- USE
--- `school_gradebook`;
---
--- SET
--- FOREIGN_KEY_CHECKS = 0;
---
--- DROP TABLE IF EXISTS `professor`;
--- CREATE TABLE `professor`
--- (
---     `id`           INT(11) NOT NULL AUTO_INCREMENT,
---     `age`          INT(11) NOT NULL,
---     `email`        VARCHAR(45) DEFAULT NULL,
---     `first_name`   VARCHAR(45) DEFAULT NULL,
---     `last_name`    VARCHAR(45) DEFAULT NULL,
---     `phone_number` VARCHAR(45) DEFAULT NULL,
---     PRIMARY KEY (`id`)
--- ) ENGINE = INNODB
---   AUTO_INCREMENT = 1
---   DEFAULT CHARSET = LATIN1;
---
--- DROP TABLE IF EXISTS `course`;
--- CREATE TABLE `course`
--- (
---     `id`   INT(11) NOT NULL AUTO_INCREMENT,
---     `name` VARCHAR(128) DEFAULT NULL,
--- --    `professor_id` INT(11) DEFAULT NULL,
---     PRIMARY KEY (`id`),
---     UNIQUE KEY `NAME_UNIQUE` (`name`)
--- --    KEY `FK_PROFESSOR` (`professor_id`)
--- ) ENGINE = INNODB
---   AUTO_INCREMENT = 100
---   DEFAULT CHARSET = LATIN1;
---
--- DROP TABLE IF EXISTS `student`;
--- CREATE TABLE `student`
--- (
---     `id`          INT(11) NOT NULL AUTO_INCREMENT,
---     `grade_level` INT(11) NOT NULL,
---     `first_name`  VARCHAR(45) DEFAULT NULL,
---     `last_name`   VARCHAR(45) DEFAULT NULL,
---     `email`       VARCHAR(45) DEFAULT NULL,
---     PRIMARY KEY (`id`)
--- ) ENGINE = INNODB
---   AUTO_INCREMENT = 1
---   DEFAULT CHARSET = LATIN1;
---
--- DROP TABLE IF EXISTS `course_student`;
--- CREATE TABLE `course_student`
--- (
---     `course_id`  INT(11) NOT NULL,
---     `student_id` INT(11) NOT NULL,
---     PRIMARY KEY (`course_id`, `student_id`),
---     KEY `FK_STUDENT` (`student_id`),
---     CONSTRAINT `FK_COURSE_STUDENT` FOREIGN KEY (`course_id`)
---         REFERENCES `course` (`id`)
---         ON DELETE NO ACTION ON UPDATE NO ACTION,
---     CONSTRAINT `FK_STUDENT` FOREIGN KEY (`student_id`)
---         REFERENCES `student` (`id`)
---         ON DELETE NO ACTION ON UPDATE NO ACTION
--- ) ENGINE = INNODB
---   DEFAULT CHARSET = LATIN1;
---
--- DROP TABLE IF EXISTS `course_professor`;
--- CREATE TABLE `course_professor`
--- (
---     `course_id`    INT(11) NOT NULL,
---     `professor_id` INT(11) NOT NULL,
---     PRIMARY KEY (`course_id`, `professor_id`),
---     KEY `FK_PROFESSOR` (`professor_id`),
---     CONSTRAINT `FK_COURSE_IDX` FOREIGN KEY (`course_id`)
---         REFERENCES `course` (`id`)
---         ON DELETE NO ACTION ON UPDATE NO ACTION,
---     CONSTRAINT `FK_PROFESSOR` FOREIGN KEY (`professor_id`)
---         REFERENCES `professor` (`id`)
---         ON DELETE NO ACTION ON UPDATE NO ACTION
--- ) ENGINE = INNODB
---   DEFAULT CHARSET = LATIN1;
---
--- DROP TABLE IF EXISTS `assignment`;
--- CREATE TABLE `assignment`
--- (
---     `id`             INT(11)     NOT NULL AUTO_INCREMENT,
---     `name`           VARCHAR(45) NOT NULL,
---     `possible_score` INT(11)     NOT NULL,
---     `course_id`      INT(11)     NOT NULL,
---     PRIMARY KEY (`id`),
---     UNIQUE KEY `NAME_UNIQUE` (`name`),
---     KEY `FK_COURSE` (`course_id`),
---     CONSTRAINT `FK_COURSE` FOREIGN KEY (`course_id`)
---         REFERENCES `course` (`id`)
---         ON DELETE NO ACTION ON UPDATE NO ACTION
--- ) ENGINE = INNODB
---   DEFAULT CHARSET = LATIN1;
---
--- DROP TABLE IF EXISTS `grade`;
--- CREATE TABLE `grade`
--- (
---     `id`            INT(11) NOT NULL auto_increment,
---     `score`         INT(11) NOT NULL,
---     `assignment_id` INT(11) NOT NULL,
---     `student_id`    INT(11) NOT NULL,
---     PRIMARY KEY (`id`),
---     KEY `FK_STUDENT_GRADE` (`student_id`),
---     CONSTRAINT `FK_ASSIGNMENT` FOREIGN KEY (`assignment_id`)
---         REFERENCES `assignment` (`id`)
---         ON DELETE NO ACTION ON UPDATE NO ACTION,
---     CONSTRAINT `FK_STUDENT_GRADE` FOREIGN KEY (`student_id`)
---         REFERENCES `student` (`id`)
---         ON DELETE NO ACTION ON UPDATE NO ACTION
--- ) ENGINE = INNODB
---   AUTO_INCREMENT = 1
---   DEFAULT CHARSET = LATIN1;
---
--- -- SPRING SECURITY TABLES
---
--- DROP TABLE IF EXISTS `user`;
--- CREATE TABLE `user`
--- (
---     `id`       INT(11)     NOT NULL auto_increment,
---     `username` varchar(50) NOT NULL UNIQUE,
---     # 	`email`    varchar(50) NOT NULL UNIQUE,
---     `password` varchar(68) NOT NULL,
---     `enabled`  tinyint(1)  NOT NULL,
---     PRIMARY KEY (`id`)
--- ) ENGINE = INNODB
---   AUTO_INCREMENT = 1
---   DEFAULT CHARSET = LATIN1;
---
--- DROP TABLE IF EXISTS `role`;
--- CREATE TABLE `role`
--- (
---     `id`   INT(11)     NOT NULL auto_increment,
---     `role` varchar(50) NOT NULL UNIQUE,
---     PRIMARY KEY (`id`)
--- ) ENGINE = INNODB
---   AUTO_INCREMENT = 1
---   DEFAULT CHARSET = LATIN1;
---
--- DROP TABLE IF EXISTS `user_role`;
--- CREATE TABLE `user_role`
--- (
---     `user_id` INT(11) NOT NULL,
---     `role_id` INT(11) NOT NULL,
---     PRIMARY KEY (`user_id`, `role_id`),
---     KEY `FK_USER` (`user_id`),
---     CONSTRAINT `FK_USER` FOREIGN KEY (`user_id`)
---         REFERENCES `user` (`id`)
---         ON DELETE NO ACTION ON UPDATE NO ACTION,
---     CONSTRAINT `FK_ROLE` FOREIGN KEY (`role_id`)
---         REFERENCES `role` (`id`)
---         ON DELETE NO ACTION ON UPDATE NO ACTION
--- ) ENGINE = INNODB
---   DEFAULT CHARSET = LATIN1;
---
--- SET
--- FOREIGN_KEY_CHECKS = 1;
---
-
 INSERT INTO EMAIL (id, email)
 VALUES (1, 'mario@gmail.com'),
        (2, 'luigi@gmail.com'),
@@ -251,18 +90,82 @@ VALUES (1, 8, 1, 5),
        (4, 8, 1, 9),
        (5, 10, 1, 13);
 
-INSERT INTO `user` (id, username, email_id, password, enabled)
-VALUES (1, 'admin_user', 15, '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
-       (2, 'professor_user', 1, '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
-       (3, 'student_user', 4, '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1);
+INSERT INTO USERS (username, password, enabled)
+VALUES ('admin_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
+       ('professor_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
+       ('student_user', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1),
+       ('turtle@gmail.com', '{bcrypt}$2y$12$APuz15agP4fEVKCiE26i.OtyKytjUQxCYToUiWw5qw04MetcbvEPa', 1);
 
-INSERT INTO `role` (id, role)
-VALUES (1, 'ADMIN'),
-       (2, 'PROFESSOR'),
-       (3, 'STUDENT');
+INSERT INTO AUTHORITIES (username, authority)
+VALUES ('admin_user', 'ROLE_ADMIN'),
+       ('professor_user', 'ROLE_PROFESSOR'),
+       ('student_user', 'ROLE_STUDENT'),
+       ('turtle@gmail.com', 'ROLE_STUDENT');
 
-INSERT INTO `user_role` (user_id, role_id)
-VALUES (1, 1),
-       (1, 2),
-       (2, 2),
-       (3, 3);
+INSERT INTO ACL_CLASS (id, class)
+VALUES (1, 'com.mortegagarcia.gradebook.model.Assignment'),
+       (2, 'com.mortegagarcia.gradebook.model.Course'),
+       (3, 'com.mortegagarcia.gradebook.model.Email'),
+       (4, 'com.mortegagarcia.gradebook.model.Grade'),
+       (5, 'com.mortegagarcia.gradebook.model.Person'),
+       (6, 'com.mortegagarcia.gradebook.model.Professor'),
+       (7, 'com.mortegagarcia.gradebook.model.Student');
+
+INSERT INTO ACL_SID (id, principal, sid)
+VALUES (1, 0, 'ROLE_ADMIN'),
+       (2, 0, 'ROLE_PROFESSOR'),
+       (3, 0, 'ROLE_STUDENT'),
+--     This is an example of how to import a user
+       (4, 1, 'mario@gmail.com'),
+       (5, 1, 'luigi@gmail.com'),
+       (6, 1, 'toad@gmail.com'),
+       (7, 1, 'bowser@gmail.com'),
+       (8, 1, 'turtle@gmail.com'),
+       (9, 1, 'yoshi@gmail.com'),
+       (10, 1, 'wario@gmail.com'),
+       (11, 1, 'waluigi@gmail.com'),
+       (12, 1, 'rosalina@gmail.com'),
+       (13, 1, 'peach@gmail.com'),
+       (14, 1, 'daisy@gmail.com'),
+       (15, 1, 'kamek@gmail.com'),
+       (16, 1, 'birdo@gmail.com'),
+       (17, 1, 'chainchomp@gmail.com'),
+       (18, 1, 'admin@gmail.com');
+
+INSERT INTO ACL_OBJECT_IDENTITY (id, object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting)
+VALUES (1, 1, 1, NULL, 6, 1),
+       (2, 1, 2, NULL, 4, 1),
+       (3, 1, 3, NULL, 4, 1),
+       (4, 1, 4, NULL, 6, 1),
+       (5, 2, 1, NULL, 4, 1),
+       (6, 2, 2, NULL, 4, 1),
+       (7, 2, 3, NULL, 6, 1),
+       (8, 3, 1, NULL, 4, 1),
+       (9, 3, 2, NULL, 5, 1),
+       (10, 3, 3, NULL, 6, 1),
+       (11, 3, 4, NULL, 7, 1),
+       (12, 3, 5, NULL, 8, 1),
+       (13, 3, 6, NULL, 9, 1),
+       (14, 3, 7, NULL, 10, 1),
+       (15, 3, 8, NULL, 11, 1),
+       (16, 3, 9, NULL, 12, 1),
+       (17, 3, 10, NULL, 13, 1),
+       (18, 3, 11, NULL, 14, 1),
+       (19, 3, 12, NULL, 15, 1),
+       (20, 3, 13, NULL, 16, 1),
+       (21, 3, 14, NULL, 17, 1),
+       (22, 3, 15, NULL, 18, 1),
+       (23, 4, 1, NULL, 6, 1),
+       (24, 4, 2, NULL, 6, 1),
+       (25, 4, 3, NULL, 6, 1),
+       (26, 4, 4, NULL, 6, 1),
+       (27, 4, 5, NULL, 6, 1);
+
+--        (id, object_id_class, object_id_identity, parent_object, owner_sid, entries_inheritting),
+
+INSERT INTO ACL_ENTRY (id, acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure)
+VALUES (1, 1, 1, 8, 1, 1, 1, 1),
+       (2, 4, 2, 8, 1, 1, 1, 1);
+
+--     (id, acl_object_identity, ace_order, sid, mask, granting, audit_success, auditf_failure),
+
